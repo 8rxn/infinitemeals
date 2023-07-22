@@ -23,7 +23,7 @@ const Recipe = (props: Props) => {
         domain: "DALLE",
       });
       console.log("fetching image");
-      const response = await fetch("http://localhost:3000/api/v1/get-image", {
+      const response = await fetch("/api/v1/get-image", {
         method: "POST",
         body: JSON.stringify(
           reqSchema.parse({ name: recipe?.name || "", id: recipe?.id || "" })
@@ -45,7 +45,7 @@ const Recipe = (props: Props) => {
     source: "https://openai.com/dall-e-2",
     domain: "DALLE",
   });
-  if(!recipe) return <h1 className="text-3xl sm:text-5xl font-bold">Something Went Wrong</h1>
+  if(!recipe) return null
 
 
 
@@ -128,14 +128,14 @@ const Recipe = (props: Props) => {
       </h2>
       <div className="grid w-fit m-auto grid-cols-5 sm:gap-8 gap-2 font-semibold sm:text-xl text-sm text-left text-slate-800 dark:text-slate-300 ">
         {recipe.instructions.map((instruction, index) => (
-          <>
-            <p className="text-[#FF0B55] dark:text-blue-500 text-right min-w-fit col-span-1">
+          <React.Fragment key={index}>
+            <p className="text-[#FF0B55] dark:text-blue-500 text-right min-w-fit col-span-1" key={index}>
               Step-{index + 1}:
             </p>
-            <p className="col-span-4  ">
+            <p className="col-span-4  " key={instruction}>
               <Balancer className="">{instruction}</Balancer>
             </p>
-          </>
+          </React.Fragment>
         ))}
       </div>
 

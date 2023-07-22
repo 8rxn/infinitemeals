@@ -64,7 +64,7 @@ export async function POST(req: Request, res: NextResponse) {
       "\n\n====================\n\n"
     );
 
-    if (!imgFromDB?.imgUrl) {
+    if (imgFromDB?.imgUrl === null) {
       console.log(
         "\n\n=======================\nFetched using Google Search API \n\n========================\n"
       );
@@ -131,9 +131,9 @@ export async function POST(req: Request, res: NextResponse) {
     return NextResponse.json(
       responseSchema.parse({
         name: jsonReq.name,
-        url: imgFromDB.imgUrl,
-        domain: imgFromDB.imgDomain,
-        source: imgFromDB.imgSource,
+        url: imgFromDB?.imgUrl,
+        domain: imgFromDB?.imgDomain,
+        source: imgFromDB?.imgSource,
       }),
       {
         status: 200,
