@@ -50,7 +50,18 @@ export async function POST(req: Request, res: NextResponse) {
       nationality == ""
         ? await prisma.recipe.findFirst({
             where: {
-              name: name,
+              OR: [
+                {
+                  name: name,
+                },
+                {
+                  searchTerms:{
+                    some:{
+                      term:name
+                    }
+                  }
+                }
+              ],
             },
             include: {
               tags: true,
@@ -60,7 +71,18 @@ export async function POST(req: Request, res: NextResponse) {
           })
         : await prisma.recipe.findFirst({
             where: {
-              name: name,
+              OR: [
+                {
+                  name: name,
+                },
+                {
+                  searchTerms:{
+                    some:{
+                      term:name
+                    }
+                  }
+                }
+              ],
               tags: {
                 some: {
                   name: nationality.replaceAll(" ", "_").toLowerCase(),
@@ -82,7 +104,7 @@ export async function POST(req: Request, res: NextResponse) {
         model: "text-davinci-003",
         prompt: `Recipe for ${name}${
           !!nationality ? ` from ${nationality}` : ""
-        } as a json object of type: {name:string,ingredients:string[],steps:string[],tagsRelated:string[]}`,
+        } as a json object of type: {name:string,ingredients:string[],steps:string[],tagsRelated:string[],commonNames:string[]}`,
         temperature: 0,
         max_tokens: 600,
         top_p: 1,
@@ -103,10 +125,14 @@ export async function POST(req: Request, res: NextResponse) {
         .replaceAll("ingredients:", '"ingredients":')
         .replaceAll("steps:", '"instructions":')
         .replaceAll("tagsRelated:", '"tagsRelated":')
+        .replaceAll("commonNames:", '"commonNames":')
         .replaceAll(",\n", ",\n  ");
 
-      const recipeGPT = JSON.parse(jsondata);
-
+        console.log("\n\n\n=====\njsondata\n\n",jsondata)
+        
+        const recipeGPT = JSON.parse(jsondata);
+        
+        console.log("\n\n\n=====\nRecipe gpt\n\n",recipeGPT)
       const createdRecipe = await prisma.recipe.create({
         data: {
           name: recipeGPT.name,
@@ -130,6 +156,12 @@ export async function POST(req: Request, res: NextResponse) {
               where: { name: tag.replaceAll(" ", "_").toLowerCase() },
             })),
           },
+          searchTerms:{
+            create:recipeGPT.commonNames.map((term:string)=>({
+              term:term
+            }))
+          }
+         
         },
       });
 
@@ -139,6 +171,9 @@ export async function POST(req: Request, res: NextResponse) {
       return NextResponse.json(responseSchema.parse(recipeGPT), {
         status: 200,
       });
+
+      console.log("Recipe not found");
+      return NextResponse.json({error:"nothing found"},{status:404})
     }
 
     console.log(recipe.tags.map((tag) => tag.name));

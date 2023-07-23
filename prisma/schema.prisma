@@ -50,7 +50,6 @@ model Steps {
 model Tags {
   id         String   @id @default(cuid())
   name       String   @unique(map: "uniqueTagName")
-  isCategory Boolean  @default(false)
   recipes    Recipe[]
 }
 
@@ -63,6 +62,13 @@ model Recipe {
   tags        Tags[]
   ingredients Ingredients[]
   steps       Steps[]
+  searchTerms SearchTerms[]
+}
+
+model SearchTerms {
+  id      String   @id @default(cuid())
+  term    String   @unique
+  recipes Recipe[]
 }
 
 model Session {
