@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Infinite Meals
+This is a Next JS Project that can fetch any recipes known to the training of Text Davinci 3. The project is in the process of being optimized. Multiple features are in their early stages which will be tweaked or replaced with better alternatives. I hope you Have a good experience using the service.
+
 
 ## Getting Started
 
@@ -18,17 +20,13 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Contributions:
 
-To learn more about Next.js, take a look at the following resources:
+Contributions are always welcome. For any suggestions / problems: feel free to create [`issues`](https://github.com/8rxn/infinitemeals/issues)
+For contributing to the code: Follow these steps:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Create a fork of this repository.
+- Create an Issue for your suggestion / Comment on existing issues for assigning.
+- Clone your fork and make the changes that you'd like to contribute.
+- Commit the changes and create a Pull Request linked to your issue.
+   
