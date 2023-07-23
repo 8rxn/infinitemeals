@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { Balancer } from "react-wrap-balancer";
 import { notFound } from "next/navigation";
 import Recipe from "@/components/Recipe";
+import RecipeFetchWrapper from "@/components/RecipeFetchWrapper";
 
 const Dashboard = async () => {
   const user = await getServerSession(authOptions);
@@ -18,8 +19,7 @@ const Dashboard = async () => {
           Look for your favorite food and let Text Davinci 3 help you cook it
         </Balancer>
       </p>
-      <FoodForm />
-      <Recipe />
+      <RecipeFetchWrapper/>
 
     </div>
   );

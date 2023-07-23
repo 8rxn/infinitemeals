@@ -29,6 +29,7 @@
     "next-auth": "^4.22.1",
     "next-themes": "^0.2.1",
     "openai": "^3.3.0",
+    "openai-edge": "^1.2.1",
     "postcss": "8.4.25",
     "react": "18.2.0",
     "react-dom": "18.2.0",

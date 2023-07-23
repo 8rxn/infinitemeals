@@ -2,8 +2,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/server/auth";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import type { BingImagesParameters } from "serpapi";
-import { getJson } from "serpapi";
 import { prisma } from "@/server/db";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -76,7 +74,7 @@ export async function POST(req: Request, res: NextResponse) {
 
       console.log(
         "\n\n=======================\n",
-        response["images_results"],
+        response["images_results"][0],
         " \n\n========================\n"
       );
 

@@ -31,7 +31,7 @@ const Categories = (props: Props) => {
     };
 
     fetchCategories();
-  },[tags]);
+  },[]);
 
   const createCategory = async (category: string) => {
     if (!category) return;

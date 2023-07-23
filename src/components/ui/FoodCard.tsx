@@ -12,6 +12,7 @@ type Props = {
   id: string;
   tags: string[];
   imgUrl?: string;
+  fetchImage: (name: string, id: string) => Promise<void>;
 };
 
 const reqSchema = z.object({
@@ -23,24 +24,12 @@ const FoodCard = (props: Props) => {
   const [imgUrl, setImgUrl] = useState("");
 
   useEffect(() => {
-    const fetchImage = async () => {
-      const res = await fetch("/api/v1/get-image", {
-        method: "POST",
-        body: JSON.stringify(
-          reqSchema.parse({ name: props.name || "", id: props.id || "" })
-        ),
-      });
-
-      const { url } = await res.json();
-      setImgUrl(url);
-    };
-
     if (!props.imgUrl) {
-      fetchImage();
+      props.fetchImage(props.name, props.id);
     } else {
       setImgUrl(props.imgUrl);
     }
-  }, [props.id,props.imgUrl,props.name]);
+  }, [props.id, props.imgUrl, props.name]);
   return (
     <Link
       href={"/recipes/" + props.id}

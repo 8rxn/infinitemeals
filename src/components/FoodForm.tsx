@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
 import { Search } from "lucide-react";
-import { useContext, useState } from "react";
+import { FC, useContext, useState } from "react";
 import SuperJSON from "superjson";
 import { ContextProvider } from "./Providers";
 
@@ -12,27 +12,12 @@ type Inputs = {
   nationality?: string;
 };
 
-const FoodForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
+interface Props {
+  fetchData: (food: string, nationality?: string) => void;
+  isLoading :  boolean;
+}
 
-  const {setRecipe} = useContext(ContextProvider)
-  const fetchData = async (food: string, nationality?: string) => {
-    setIsLoading(true);
-    const res = await fetch("/api/v1/get-recipe", {
-      method: "POST",
-      body: SuperJSON.stringify({ name: food, nationality }),
-    });
-
-    const data = await res.json();
-    console.log(data);
-    if(data.error){
-      setIsLoading(false);
-      return;
-    } 
-    setRecipe(await data);
-    setIsLoading(false);
-    
-  };
+const FoodForm: FC<Props> = ({ fetchData, isLoading }) => {
 
   const {
     register,

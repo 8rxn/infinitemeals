@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import SuperJSON from "superjson";
 import FoodCard from "./ui/FoodCard";
+import ImageFetchWrapper from "./ImageFetchWrapper";
 type Props = {
   tag: string;
 };
@@ -46,14 +47,14 @@ const FoodCards = (props: Props) => {
           {food.length > 0 ? (
             food.flatMap((foodItem) =>
               foodItem.imgUrl ? (
-                <FoodCard
+                <ImageFetchWrapper
                   name={foodItem.name}
                   id={foodItem.id}
                   tags={foodItem.tags}
                   imgUrl={foodItem.imgUrl}
                 />
               ) : (
-                <FoodCard
+                <ImageFetchWrapper
                   name={foodItem.name}
                   id={foodItem.id}
                   tags={foodItem.tags}

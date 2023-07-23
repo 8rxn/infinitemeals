@@ -8,6 +8,9 @@ export interface data {
   ingredients: string[];
   instructions: string[];
   tags: string[];
+  imgUrl: string;
+  imgSource: string;
+  imgDomain: string;
 }
 
 export const ContextProvider = createContext<{recipe:data | null,setRecipe:React.Dispatch<React.SetStateAction<data | null>>}>({recipe:null,setRecipe:()=>{}});

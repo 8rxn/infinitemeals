@@ -13,7 +13,6 @@ const reqSchema = z.object({
 });
 
 const Recipe = (props: Props) => {
-  
   const { recipe } = useContext(ContextProvider);
   useEffect(() => {
     const fetchImage = async () => {
@@ -29,10 +28,10 @@ const Recipe = (props: Props) => {
           reqSchema.parse({ name: recipe?.name || "", id: recipe?.id || "" })
         ),
       });
-  
+
       const img: { url: string; source: string; domain: string } =
         await response.json();
-      setImg(img);
+      if (recipe) setImg(img);
     };
     fetchImage();
   }, [recipe]);
@@ -45,11 +44,7 @@ const Recipe = (props: Props) => {
     source: "https://openai.com/dall-e-2",
     domain: "DALLE",
   });
-  if(!recipe) return null
-
-
-
-  
+  if (!recipe) return null;
 
   return (
     <div className="bg-slate-100 dark:bg-slate-900 p-8 sm:p-12 rounded-xl shadow-lg max-[500px]:pt-16">
@@ -129,7 +124,10 @@ const Recipe = (props: Props) => {
       <div className="grid w-fit m-auto grid-cols-5 sm:gap-8 gap-2 font-semibold sm:text-xl text-sm text-left text-slate-800 dark:text-slate-300 ">
         {recipe.instructions.map((instruction, index) => (
           <React.Fragment key={index}>
-            <p className="text-[#FF0B55] dark:text-blue-500 text-right min-w-fit col-span-1" key={index}>
+            <p
+              className="text-[#FF0B55] dark:text-blue-500 text-right min-w-fit col-span-1"
+              key={index}
+            >
               Step-{index + 1}:
             </p>
             <p className="col-span-4  " key={instruction}>

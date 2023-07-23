@@ -24,9 +24,6 @@ const reqSchema = z.object({
 
 export async function POST(req: Request, res: NextResponse) {
   const session = await getServerSession(authOptions);
-  const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
 
   if (!session) {
     return NextResponse.json(
@@ -98,83 +95,12 @@ export async function POST(req: Request, res: NextResponse) {
           });
 
     if (recipe?.id === undefined) {
-      console.log("Trying on GPT-3");
-      const openai = new OpenAIApi(configuration);
+     
 
-      const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: `Recipe for ${name}${
-          !!nationality ? ` from ${nationality}` : ""
-        } as a json object of type: {name:string,ingredients:string[],steps:string[],tagsRelated:string[],commonNames:string[]}`,
-        temperature: 0,
-        max_tokens: 600,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-        stop: ['"""'],
+      console.log("Not Found", );
+      return NextResponse.json({name:"try-on-ai"}, {
+        status: 404,
       });
-      const responseAI = JSON.stringify(response.data.choices[0].text)
-        .replaceAll("\\n", "\n")
-        .replaceAll("\\", "")
-        .replaceAll('""', '"');
-
-      const jsondata = responseAI
-        .substring(0, responseAI.length - 1)
-        .replace('"', "")
-        .trim()
-        .replaceAll("name:", '"name":')
-        .replaceAll("ingredients:", '"ingredients":')
-        .replaceAll("steps:", '"instructions":')
-        .replaceAll("tagsRelated:", '"tagsRelated":')
-        .replaceAll("commonNames:", '"commonNames":')
-        .replaceAll(",\n", ",\n  ");
-
-        console.log("\n\n\n=====\njsondata\n\n",jsondata)
-        
-        const recipeGPT = JSON.parse(jsondata);
-        
-        console.log("\n\n\n=====\nRecipe gpt\n\n",recipeGPT)
-      const createdRecipe = await prisma.recipe.create({
-        data: {
-          name: recipeGPT.name,
-          ingredients: {
-            create: recipeGPT.ingredients.map(
-              (ingredient: string, i: number) => ({
-                item: ingredient,
-                index: i,
-              })
-            ),
-          },
-          steps: {
-            create: recipeGPT.instructions.map((step: string, i: number) => ({
-              step: step,
-              index: i,
-            })),
-          },
-          tags: {
-            connectOrCreate: recipeGPT.tagsRelated.map((tag: string) => ({
-              create: { name: tag.replaceAll(" ", "_").toLowerCase() },
-              where: { name: tag.replaceAll(" ", "_").toLowerCase() },
-            })),
-          },
-          searchTerms:{
-            create:recipeGPT.commonNames.map((term:string)=>({
-              term:term
-            }))
-          }
-         
-        },
-      });
-
-      recipeGPT.id = createdRecipe.id;
-
-      console.log("Created Recipe", createdRecipe);
-      return NextResponse.json(responseSchema.parse(recipeGPT), {
-        status: 200,
-      });
-
-      console.log("Recipe not found");
-      return NextResponse.json({error:"nothing found"},{status:404})
     }
 
     console.log(recipe.tags.map((tag) => tag.name));
