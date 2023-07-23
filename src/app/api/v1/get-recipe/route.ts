@@ -5,6 +5,10 @@ import { array, z } from "zod";
 import { authOptions } from "@/server/auth";
 import { Configuration, OpenAIApi } from "openai";
 
+export const config = {
+  runtime: 'edge', // this is a pre-requisite
+};
+
 const responseSchema = z.object({
   id: z.string(),
   name: z.string(),
