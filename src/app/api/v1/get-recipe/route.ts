@@ -5,9 +5,9 @@ import { array, z } from "zod";
 import { authOptions } from "@/server/auth";
 import { Configuration, OpenAIApi } from "openai";
 
-export const config = {
-  runtime: 'edge', // this is a pre-requisite
-};
+export const runtime= "edge"
+export const fetchCache= "auto"
+export const preferredRegion = 'auto'
 
 const responseSchema = z.object({
   id: z.string(),
