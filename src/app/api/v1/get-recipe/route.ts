@@ -6,8 +6,6 @@ import { authOptions } from "@/server/auth";
 import { Configuration, OpenAIApi } from "openai";
 
 export const runtime= "edge"
-export const fetchCache= "auto"
-export const preferredRegion = 'auto'
 
 const responseSchema = z.object({
   id: z.string(),
