@@ -44,7 +44,7 @@ const FoodCards = (props: Props) => {
         <Loader2 className="w-10 h-10 m-auto animate-spin"></Loader2>
       ) : (
         <>
-          {food.length > 0 ? (
+          {food?.length > 0 ? (
             food.flatMap((foodItem) =>
               foodItem.imgUrl ? (
                 <ImageFetchWrapper

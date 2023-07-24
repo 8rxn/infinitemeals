@@ -11,7 +11,7 @@ const responseSchema = z.object({
     z.object({
       name: z.string(),
       tags: array(z.string()).optional(),
-      imgUrl: z.string().url(),
+      imgUrl: z.string().url().nullable(),
       id: z.string(),
     })
   ),
@@ -102,6 +102,8 @@ export async function POST(req: Request, res: NextResponse) {
         imgUrl: recipe.imgUrl,
       });
     });
+
+    console.log("Response Array", responseArray);
 
     if (recipes.length === 0) {
       console.log("Trying on Text Davinci - 3");

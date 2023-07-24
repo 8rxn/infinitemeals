@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/server/db";
 import { v2 as cloudinary } from "cloudinary";
+import { UploadApiResponse } from "cloudinary";
 
 const responseSchema = z.object({
   name: z.string(),
@@ -95,8 +96,24 @@ export async function POST(req: Request, res: NextResponse) {
         secure: true,
       });
 
-      const cloudinaryResponse = await cloudinary.uploader.upload(url || "");
-      const cloudinaryUrl = cloudinaryResponse?.secure_url;
+      let cloudinaryResponse: UploadApiResponse;
+      let cloudinaryUrl: string = "";
+      try {
+        cloudinaryResponse = await cloudinary.uploader.upload(url || "");
+        cloudinaryUrl = cloudinaryResponse?.secure_url;
+      } catch (err) {
+        if (
+          err != null &&
+          typeof err == "object" &&
+          "http_code" in err &&
+          err.http_code == "404"
+        ) {
+          cloudinaryResponse = await cloudinary.uploader.upload(
+            response["images_results"][0].thumbnail
+          );
+          cloudinaryUrl = cloudinaryResponse?.secure_url;
+        }
+      }
 
       const addImageToDB = await prisma.recipe.update({
         where: {
@@ -145,6 +162,7 @@ export async function POST(req: Request, res: NextResponse) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });
     }
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
