@@ -12,9 +12,9 @@ const responseSchema = z.object({
   ingredients: array(z.string()),
   instructions: array(z.string()),
   tags: array(z.string()).optional(),
-  imgUrl: z.string().optional(),
-  imgDomain: z.string().optional(),
-  imgSource: z.string().optional(),
+  imgUrl: z.string().optional().nullable(),
+  imgDomain: z.string().optional().nullable(),
+  imgSource: z.string().optional().nullable(),
 });
 
 const reqSchema = z.object({

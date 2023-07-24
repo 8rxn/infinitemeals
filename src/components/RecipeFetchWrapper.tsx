@@ -12,6 +12,8 @@ const RecipeFetchWrapper = (props: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchData = async (food: string, nationality?: string) => {
+    setRecipe(null);
+    console.log("fetching data - recipe",recipe)
     setIsLoading(true);
     let res = await fetch("/api/v1/get-recipe", {
       method: "POST",
@@ -32,6 +34,7 @@ const RecipeFetchWrapper = (props: Props) => {
         body: SuperJSON.stringify(resGpt),
       });
     }
+
     const data = await res.json();
 
     console.log(data);
@@ -39,7 +42,7 @@ const RecipeFetchWrapper = (props: Props) => {
       setIsLoading(false);
       return;
     }
-    setRecipe(recipe ? { ...recipe, id: data.id } : data);
+    setRecipe(data);
     setIsLoading(false);
   };
 
