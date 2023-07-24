@@ -17,11 +17,6 @@ const Recipe = (props: Props) => {
   const { recipe } = useContext(ContextProvider);
   useEffect(() => {
     const fetchImage = async () => {
-      setImg({
-        url: "/burger-placeholder.webp",
-        source: "https://openai.com/dall-e-2",
-        domain: "DALLE",
-      });
       console.log("fetching image");
       const response = await fetch("/api/v1/get-image", {
         method: "POST",
@@ -36,6 +31,13 @@ const Recipe = (props: Props) => {
     };
     if (recipe?.id) {
       fetchImage();
+    }
+    if(recipe==null){
+      setImg({
+        url: "/burger-placeholder.webp",
+        source: "https://openai.com/dall-e-2",
+        domain: "DALLE",
+      });
     }
   }, [recipe]);
   const [img, setImg] = useState<{

@@ -6,7 +6,8 @@ const responseSchema = z.object({
   name: z.string(),
   ingredients: array(z.string()),
   instructions: array(z.string()),
-  tags: array(z.string()).optional(),
+  tagsRelated: array(z.string()).optional(),
+  commonNames: array(z.string()).optional(),
   imgUrl: z.string().optional(),
   imgDomain: z.string().optional(),
   imgSource: z.string().optional(),
@@ -74,8 +75,11 @@ export async function POST(req: Request, res: NextResponse) {
     console.log("\n\n\n=====\njsondata\n\n", jsondata);
 
     const recipeGPT = JSON.parse(jsondata);
+    
+    
     recipeGPT.commonNames.push(name);
 
+    console.log(recipeGPT)
 
 
     return NextResponse.json(responseSchema.parse(recipeGPT), {

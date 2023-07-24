@@ -17,7 +17,8 @@ const reqSchema = z.object({
   name: z.string(),
   ingredients: array(z.string()),
   instructions: array(z.string()),
-  tags: array(z.string()).optional(),
+  tagsRelated: array(z.string()).optional(),
+  searchTerms: array(z.string()).optional(),
   imgUrl: z.string().optional(),
   imgDomain: z.string().optional(),
   imgSource: z.string().optional(),
@@ -30,7 +31,7 @@ export async function POST(req: Request, res: NextResponse) {
 
     console.log(
       "========= \n\n\n RecipeGPT[commonNames] \n\n\n ",
-      recipeGPT["commonNames"]?.map((step: string) => step),
+      recipeGPT.commonNames,
       "=================="
     );
 
@@ -45,12 +46,6 @@ export async function POST(req: Request, res: NextResponse) {
             })
           ),
         },
-        steps: {
-          create: recipeGPT.instructions?.map((step: string, i: number) => ({
-            step: step,
-            index: i,
-          })),
-        },
         tags: {
           connectOrCreate: recipeGPT.tagsRelated?.map((tag: string) => ({
             create: { name: tag.replaceAll(" ", "_").toLowerCase() },
@@ -58,8 +53,15 @@ export async function POST(req: Request, res: NextResponse) {
           })),
         },
         searchTerms: {
-          create: recipeGPT.commonNames?.map((term: string) => ({
-            term: term,
+          connectOrCreate: recipeGPT.commonNames?.map((term: string) => ({
+            create: { term: term },
+            where: { term: term },
+          })),
+        },
+        steps: {
+          create: recipeGPT.instructions?.map((step: string, i: number) => ({
+            step: step,
+            index: i,
           })),
         },
       },

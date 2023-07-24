@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { FC, useContext, useState } from "react";
 import SuperJSON from "superjson";
 import { ContextProvider } from "./Providers";
+import Balancer from "react-wrap-balancer";
 
 type Inputs = {
   food: string;
@@ -14,11 +15,11 @@ type Inputs = {
 
 interface Props {
   fetchData: (food: string, nationality?: string) => void;
-  isLoading :  boolean;
+  isLoading: boolean;
+  status: boolean;
 }
 
-const FoodForm: FC<Props> = ({ fetchData, isLoading }) => {
-
+const FoodForm: FC<Props> = ({ fetchData, isLoading, status }) => {
   const {
     register,
     handleSubmit,
@@ -68,6 +69,13 @@ const FoodForm: FC<Props> = ({ fetchData, isLoading }) => {
       >
         Search <Search className="ml-2" />{" "}
       </Button>
+     <p
+        className={`text-sm font-semibold max-w-sm mx-auto col-span-full ${
+          status ? "opacity-100" : "opacity-0"
+        } transition-opacity duration-500 ease-out`}
+      >
+        <Balancer>Does not Exist on DB <br/> Trying on Text Davinci 003</Balancer>
+      </p>
     </form>
   );
 };

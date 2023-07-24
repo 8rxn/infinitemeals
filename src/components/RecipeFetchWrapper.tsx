@@ -10,6 +10,7 @@ type Props = {};
 const RecipeFetchWrapper = (props: Props) => {
   const { recipe, setRecipe } = useContext(ContextProvider);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [status, setStatus] = useState<boolean>(false)
 
   const fetchData = async (food: string, nationality?: string) => {
     setRecipe(null);
@@ -21,6 +22,7 @@ const RecipeFetchWrapper = (props: Props) => {
     });
 
     if (res.status == 404) {
+      setStatus(true)
       res = await fetch("/api/v1/get-recipe-by-ai", {
         method: "POST",
         body: SuperJSON.stringify({ name: food, nationality }),
@@ -28,6 +30,7 @@ const RecipeFetchWrapper = (props: Props) => {
       const resGpt = await res.json();
 
       setRecipe(await resGpt);
+      setStatus(false)
       setIsLoading(false);
       res = await fetch("/api/v1/update-recipe-by-ai", {
         method: "POST",
@@ -43,12 +46,13 @@ const RecipeFetchWrapper = (props: Props) => {
       return;
     }
     setRecipe(data);
+    console.log("Set reicpe: ", recipe)
     setIsLoading(false);
   };
 
   return (
     <>
-      <FoodForm fetchData={fetchData} isLoading={isLoading} />
+      <FoodForm fetchData={fetchData} isLoading={isLoading} status={status}  />
       <Recipe />
     </>
   );
