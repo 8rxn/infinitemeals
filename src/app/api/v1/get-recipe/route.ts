@@ -76,7 +76,7 @@ export async function POST(req: Request, res: NextResponse) {
                 {
                   searchTerms:{
                     some:{
-                      term:name
+                      term:name.trim()
                     }
                   }
                 }

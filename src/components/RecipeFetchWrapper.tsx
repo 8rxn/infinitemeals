@@ -24,6 +24,9 @@ const RecipeFetchWrapper = (props: Props) => {
         body: SuperJSON.stringify({ name: food, nationality }),
       });
       const resGpt = await res.json();
+
+      setRecipe(await resGpt);
+      setIsLoading(false);
       res = await fetch("/api/v1/update-recipe-by-ai", {
         method: "POST",
         body: SuperJSON.stringify(resGpt),
@@ -36,7 +39,7 @@ const RecipeFetchWrapper = (props: Props) => {
       setIsLoading(false);
       return;
     }
-    setRecipe(await data);
+    setRecipe(recipe ? { ...recipe, id: data.id } : data);
     setIsLoading(false);
   };
 

@@ -74,6 +74,7 @@ export async function POST(req: Request, res: NextResponse) {
     console.log("\n\n\n=====\njsondata\n\n", jsondata);
 
     const recipeGPT = JSON.parse(jsondata);
+    recipeGPT.commonNames.push(name);
 
 
 

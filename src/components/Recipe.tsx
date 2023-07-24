@@ -5,6 +5,7 @@ import { ContextProvider } from "./Providers";
 import Image from "next/image";
 import { z } from "zod";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 type Props = {};
 const reqSchema = z.object({
@@ -33,7 +34,9 @@ const Recipe = (props: Props) => {
         await response.json();
       if (recipe) setImg(img);
     };
-    fetchImage();
+    if (recipe?.id) {
+      fetchImage();
+    }
   }, [recipe]);
   const [img, setImg] = useState<{
     url: string;
@@ -70,13 +73,27 @@ const Recipe = (props: Props) => {
       {img?.url && (
         <div className="flex justify-between flex-wrap gap-4 items-center">
           {" "}
-          <Image
-            src={img.url}
-            alt={"Image of " + recipe.name}
-            width={500}
-            height={500}
-            className="object-cover max-w-[80dvw] aspect-square rounded-xl shadow-lg"
-          />
+          <div className={"max-w-[80dvw] w-[500px] aspect-square relative "}>
+            {img.url !== "/burger-placeholder.webp" ? (
+              <Image
+                src={img.url}
+                alt={"Image of " + recipe.name}
+                width={500}
+                height={500}
+                className="object-cover aspect-square brightness-75 rounded-xl shadow-lg"
+              />
+            ) : (
+              <>
+                <Loader2 className="w-10 h-10 animate-spin relative z-10 top-[45%] left-[45%] text-white " />
+                <Image
+                  src={img.url}
+                  alt={"placeholder for recipe image"}
+                  fill
+                  className="brightness-75 blur-sm rounded-xl shadow-lg"
+                />
+              </>
+            )}
+          </div>
           <h1 className="font-bold text-lg sm:text-2xl mb-4 ">
             <Balancer>
               Image From{" "}
