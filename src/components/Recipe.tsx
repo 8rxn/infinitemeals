@@ -98,7 +98,7 @@ const Recipe = (props: Props) => {
             <Balancer>
               Image From{" "}
               <span className="text-[#FF0B55]  dark:text-blue-500 underline underline-offset-8 cursor-pointer ">
-                <a href={img.source}>{img.domain}</a> <br />
+                <a href={img.source} target="_blank" rel="noreferrer">{img.domain}</a> <br />
               </span>
               <span className="underline underline-offset-8 cursor-pointer mt-6 ">
                 Report Error

@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/server/auth";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import {GoogleParameters,getJson} from "serpapi"
 import { prisma } from "@/server/db";
 import { v2 as cloudinary } from "cloudinary";
 import { UploadApiResponse } from "cloudinary";
