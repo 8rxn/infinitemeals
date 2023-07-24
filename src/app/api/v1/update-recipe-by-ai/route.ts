@@ -29,8 +29,8 @@ export async function POST(req: Request, res: NextResponse) {
     const recipeGPT = await recipe.json;
 
     console.log(
-      "========= \n\n\n RecipeGPT \n\n\n ",
-      recipeGPT["instructions"]?.map((step: string) => step),
+      "========= \n\n\n RecipeGPT[commonNames] \n\n\n ",
+      recipeGPT["commonNames"]?.map((step: string) => step),
       "=================="
     );
 
