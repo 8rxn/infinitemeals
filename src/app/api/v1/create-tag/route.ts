@@ -29,6 +29,18 @@ export async function POST(req: Request, res: NextResponse) {
     const body =  await req.json()
     
     const {tag}:{tag:string} = body
+
+    const tagExists = await prisma.tags.findFirst({
+        where:{
+            name:tag.replaceAll(" ","_").toLowerCase()
+        }
+    })
+
+    console.log("\n\n\n\nTagExists?:",tagExists)
+
+    if(tagExists!==null){
+      return NextResponse.error()
+    }
     
     const tagCreated = await prisma.tags.create(
         {

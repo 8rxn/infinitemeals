@@ -21,7 +21,7 @@ const page = async (props: Props) => {
         </Balancer>
       </h1>
       <p className="sm:text-3xl text-lg text-slate-800 dark:text-slate-300">
-        <Balancer>Explore food from this category</Balancer>
+        <Balancer>Explore all food from various cuisines that have been added to our database </Balancer>
       </p>
       <FoodCards tag={"all"} />
     </div>

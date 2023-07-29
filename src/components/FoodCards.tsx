@@ -2,7 +2,6 @@
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import SuperJSON from "superjson";
-import FoodCard from "./ui/FoodCard";
 import ImageFetchWrapper from "./ImageFetchWrapper";
 type Props = {
   tag: string;
@@ -24,10 +23,34 @@ const FoodCards = (props: Props) => {
   useEffect(() => {
     const fetchRecipes = async () => {
       setLoading(true);
-      const res = await fetch("/api/v1/get-recipes-by-tag", {
+      let res = await fetch("/api/v1/get-recipes-by-tag", {
         method: "POST",
         body: SuperJSON.stringify({ tag: props.tag }),
       });
+      if (res.status == 404) {
+        res = await fetch("/api/v1/get-recipe-by-tag-ai", {
+          method: "POST",
+          body: SuperJSON.stringify({ tag: props.tag }),
+        });
+
+        const resGpt = await res.json();
+        console.log(resGpt);
+
+        res = await fetch("/api/v1/update-recipe-by-ai", {
+          method: "POST",
+          body: SuperJSON.stringify(resGpt),
+        });
+
+        const recipe = await res.json();
+        console.log(recipe);
+
+        setFood([
+          { id: recipe.id, name: recipe.name, tags: recipe.tagsRelated, imgUrl: recipe.imgUrl },
+        ]);
+        setLoading(false);
+
+        return;
+      }
 
       const json = await res.json();
       const foodFetched = await json.recipes;

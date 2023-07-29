@@ -5,13 +5,12 @@ import { array, z } from "zod";
 import { authOptions } from "@/server/auth";
 import { Configuration, OpenAIApi } from "openai";
 
-
 const responseSchema = z.object({
   id: z.string(),
   name: z.string(),
   ingredients: array(z.string()),
   instructions: array(z.string()),
-  tags: array(z.string()).optional(),
+  tagsRelated: array(z.string()).optional(),
   imgUrl: z.string().optional().nullable(),
   imgDomain: z.string().optional().nullable(),
   imgSource: z.string().optional().nullable(),
@@ -53,12 +52,12 @@ export async function POST(req: Request, res: NextResponse) {
                   name: name,
                 },
                 {
-                  searchTerms:{
-                    some:{
-                      term:name
-                    }
-                  }
-                }
+                  searchTerms: {
+                    some: {
+                      term: name,
+                    },
+                  },
+                },
               ],
             },
             include: {
@@ -74,12 +73,12 @@ export async function POST(req: Request, res: NextResponse) {
                   name: name,
                 },
                 {
-                  searchTerms:{
-                    some:{
-                      term:name.trim()
-                    }
-                  }
-                }
+                  searchTerms: {
+                    some: {
+                      term: name.trim(),
+                    },
+                  },
+                },
               ],
               tags: {
                 some: {
@@ -95,12 +94,13 @@ export async function POST(req: Request, res: NextResponse) {
           });
 
     if (recipe?.id === undefined) {
-     
-
-      console.log("Not Found", );
-      return NextResponse.json({name:"try-on-ai"}, {
-        status: 404,
-      });
+      console.log("Not Found");
+      return NextResponse.json(
+        { name: "try-on-ai" },
+        {
+          status: 404,
+        }
+      );
     }
 
     console.log(recipe.tags.map((tag) => tag.name));
@@ -110,7 +110,7 @@ export async function POST(req: Request, res: NextResponse) {
       name: recipe.name,
       ingredients: recipe.ingredients.map((ingredient) => ingredient.item),
       instructions: recipe.steps.map((step) => step.step),
-      tags: recipe.tags.map((tag) => tag.name),
+      tagsRelated: recipe.tags.map((tag) => tag.name),
       imgUrl: recipe.imgUrl,
       imgDomain: recipe.imgDomain,
       imgSource: recipe.imgSource,

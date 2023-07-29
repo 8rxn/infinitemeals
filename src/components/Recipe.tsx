@@ -62,10 +62,10 @@ const Recipe = (props: Props) => {
           ,
         </Balancer>
         <div className="flex justify-center flex-wrap gap-x-4  max-w-[90vw]">
-          {recipe.tags?.map((tag: string) => (
+          {recipe.tagsRelated?.map((tag: string) => (
             <Link href={"/categories/" + tag} key={tag}>
               <p className="sm:text-2xl inline-block text-base hover:shadow-inner dark:hover:brightness-125 transition  bg-slate-200 dark:bg-slate-800 rounded-r-full rounded-l-full px-8 py-1  cursor-pointer capitalize">
-                <Balancer>{tag.replaceAll(" ", "_")}</Balancer>
+                <Balancer>{tag.replaceAll("_", " ")}</Balancer>
               </p>
             </Link>
           ))}

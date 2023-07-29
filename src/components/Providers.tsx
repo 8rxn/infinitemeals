@@ -7,7 +7,7 @@ export interface data {
   name: string;
   ingredients: string[];
   instructions: string[];
-  tags: string[];
+  tagsRelated: string[];
   imgUrl: string;
   imgSource: string;
   imgDomain: string;

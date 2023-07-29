@@ -31,7 +31,7 @@ const Categories = (props: Props) => {
     };
 
     fetchCategories();
-  },[]);
+  }, []);
 
   const createCategory = async (category: string) => {
     if (!category) return;
@@ -46,17 +46,16 @@ const Categories = (props: Props) => {
     try {
       const res = await fetch("/api/v1/create-tag", {
         method: "POST",
-        body: JSON.stringify({ tag:category }),
+        body: JSON.stringify({ tag: category }),
       });
 
-      
+      if (res.status == 200) {
+        setCategoryForm(false);
+      } else if (res.status == 500) {
+        setTags(tags.filter((value) => value !== category));
+      }
     } catch (err) {
-      setTags(
-        tags.filter((value) => {
-          value !== category;
-        })
-      );
-      console.log(err)
+      console.log(err);
     }
     setLoading(false);
   };
@@ -88,9 +87,9 @@ const Categories = (props: Props) => {
         <div className="flex gap-8 justify-center mt-8 flex-wrap flex-1 max-w-[90vw]">
           {tags &&
             tags?.map((tag: string) => (
-              <Link href={"/categories/" + tag} key={tag} >
+              <Link href={"/categories/" + tag} key={tag}>
                 <p className="sm:text-2xl inline-block text-base hover:brightness-125 text-[#FF0B55] dark:text-blue-500 underline underline-offset-8 cursor-pointer capitalize">
-                  <Balancer>{tag.replaceAll("_"," ")}</Balancer>
+                  <Balancer>{tag.replaceAll("_", " ")}</Balancer>
                 </p>
               </Link>
             ))}

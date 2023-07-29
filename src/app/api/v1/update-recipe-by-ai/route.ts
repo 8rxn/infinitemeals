@@ -8,6 +8,7 @@ const responseSchema = z.object({
   ingredients: array(z.string()),
   instructions: array(z.string()),
   tags: array(z.string()).optional(),
+  tagsRelated: array(z.string()).optional(),
   imgUrl: z.string().optional(),
   imgDomain: z.string().optional(),
   imgSource: z.string().optional(),
@@ -17,8 +18,8 @@ const reqSchema = z.object({
   name: z.string(),
   ingredients: array(z.string()),
   instructions: array(z.string()),
-  tagsRelated: array(z.string()).optional(),
-  searchTerms: array(z.string()).optional(),
+  tagsRelated: array(z.string()).nullable(),
+  searchTerms: array(z.string()).nullable(),
   imgUrl: z.string().optional(),
   imgDomain: z.string().optional(),
   imgSource: z.string().optional(),
@@ -85,37 +86,3 @@ export async function POST(req: Request, res: NextResponse) {
     );
   }
 }
-
-// console.log("\n\n\n=====\nRecipe gpt\n\n", recipeGPT);
-// const createdRecipe = await prisma.recipe.create({
-//   data: {
-//     name: recipeGPT.name,
-//     ingredients: {
-//       create: recipeGPT.ingredients?.map((ingredient: string, i: number) => ({
-//         item: ingredient,
-//         index: i,
-//       })),
-//     },
-//     steps: {
-//       create: recipeGPT.instructions?.map((step: string, i: number) => ({
-//         step: step,
-//         index: i,
-//       })),
-//     },
-//     tags: {
-//       connectOrCreate: recipeGPT.tagsRelated?.map((tag: string) => ({
-//         create: { name: tag.replaceAll(" ", "_").toLowerCase() },
-//         where: { name: tag.replaceAll(" ", "_").toLowerCase() },
-//       })),
-//     },
-//     searchTerms: {
-//       create: recipeGPT.commonNames?.map((term: string) => ({
-//         term: term,
-//       })),
-//     },
-//   },
-// });
-
-// recipeGPT.id = createdRecipe.id;
-
-// console.log("Created Recipe", createdRecipe);

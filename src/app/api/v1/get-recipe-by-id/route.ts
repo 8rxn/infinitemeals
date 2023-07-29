@@ -9,7 +9,7 @@ const responseSchema = z.object({
   name: z.string(),
   ingredients: array(z.string()),
   instructions: array(z.string()),
-  tags: array(z.string()).optional(),
+  tagsRelated: array(z.string()).nullable(),
 });
 
 const reqSchema = z.object({
@@ -45,12 +45,14 @@ export async function POST(req: Request, res: NextResponse) {
       return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
     }
 
+    console.log("===============\nRecipe: by ID: \n\n\n",recipe)
+
     const responseJSON = {
       id: recipe.id,
       name: recipe.name,
       ingredients: recipe.ingredients.map((ingredient) => ingredient.item),
       instructions: recipe.steps.map((step) => step.step),
-      tags: recipe.tags.map((tag) => tag.name),
+      tagsRelated: recipe.tags.map((tag) => tag.name),
     };
 
     return NextResponse.json(responseSchema.parse(responseJSON), {

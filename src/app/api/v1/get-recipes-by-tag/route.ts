@@ -3,8 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { array, z } from "zod";
 import { authOptions } from "@/server/auth";
-import { Configuration, OpenAIApi } from "openai";
-import SuperJSON from "superjson";
+
 
 const responseSchema = z.object({
   recipes: z.array(
@@ -36,29 +35,6 @@ export async function POST(req: Request, res: NextResponse) {
 
     console.log(body.json);
     const { tag } = reqSchema.parse(body.json);
-
-    // let recipes = [];
-
-    // if (tag === "all") {
-    //   recipes = await prisma.recipe.findMany({
-    //     include: {
-    //       tags: true,
-    //     },
-    //   });
-    // } else {
-    //   recipes = await prisma.recipe.findMany({
-    //     where: {
-    //       tags: {
-    //         some: {
-    //           name: tag.replaceAll(" ", "_").toLowerCase(),
-    //         },
-    //       },
-    //     },
-    //     include: {
-    //       tags: true,
-    //     },
-    //   });
-    // }
 
     const recipes =
       tag === "all"
@@ -106,9 +82,9 @@ export async function POST(req: Request, res: NextResponse) {
     console.log("Response Array", responseArray);
 
     if (recipes.length === 0) {
-      console.log("Trying on Text Davinci - 3");
+      // console.log("Trying on Text Davinci - 3");
       // const configuration = new Configuration({
-      //   apiKey: "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",
+      //   apiKey: process.env.OPENAI_API_KEY,
       // });
       // const openai = new OpenAIApi(configuration);
 
@@ -143,25 +119,16 @@ export async function POST(req: Request, res: NextResponse) {
 
       // console.log("responseJSONDATA:\n",responseAI,"\n\n")
 
-      const jsondata = `{
-        name: "Caprese Salad",
-        ingredients: ["2 large tomatoes", "8 ounces fresh mozzarella cheese", "1/4 cup fresh basil leaves", "2 tablespoons extra-virgin olive oil", "1 teaspoon balsamic vinegar", "Salt and freshly ground black pepper to taste"],
-        steps: ["Slice the tomatoes and mozzarella into 1/4-inch thick slices.", "Arrange the tomato and mozzarella slices on a plate.", "Tear the basil leaves into small pieces and sprinkle over the tomatoes and mozzarella.", "Drizzle the olive oil and balsamic vinegar over the salad.", "Season with salt and pepper to taste."],
-        tagsRelated: ["Italian", "Salad", "Tomato", "Mozzarella", "Basil", "Olive Oil", "Balsamic Vinegar"]
-    }`
-        .replaceAll("name", '"name"')
-        .replaceAll("ingredients", '"ingredients"')
-        .replaceAll("steps", '"instructions"')
-        .replaceAll("tagsRelated", '"tagsRelated"');
+      // const recipeGPT = await JSON.parse(jsondata);
 
-      const recipeGPT = await JSON.parse(jsondata);
+      // console.log("responseGPT:\n", recipeGPT, "\n\n");
 
-      console.log("responseGPT:\n", recipeGPT, "\n\n");
       // const createdRecipe = await prisma.recipe.create({
       //   data: {
       //     name: recipeGPT.name,
       //     ingredients: {
-      //       create: recipeGPT.ingredients.map((ingredient: string, i: number) => ({
+      //       create: recipeGPT.ingredients.map(
+      //         (ingredient: string, i: number) => ({
       //           item: ingredient,
       //           index: i,
       //         })
@@ -175,46 +142,23 @@ export async function POST(req: Request, res: NextResponse) {
       //     },
       //     tags: {
       //       connectOrCreate: recipeGPT.tagsRelated.map((tag: string) => ({
-      //         name: tag,
+      //         create: { name: tag.replaceAll(" ", "_").toLowerCase() },
+      //         where: { name: tag.replaceAll(" ", "_").toLowerCase() },
       //       })),
       //     },
       //   },
       // });
 
-      const createdRecipe = await prisma.recipe.create({
-        data: {
-          name: recipeGPT.name,
-          ingredients: {
-            create: recipeGPT.ingredients.map(
-              (ingredient: string, i: number) => ({
-                item: ingredient,
-                index: i,
-              })
-            ),
-          },
-          steps: {
-            create: recipeGPT.instructions.map((step: string, i: number) => ({
-              step: step,
-              index: i,
-            })),
-          },
-          tags: {
-            connectOrCreate: recipeGPT.tagsRelated.map((tag: string) => ({
-              create: { name: tag.replaceAll(" ", "_").toLowerCase() },
-              where: { name: tag.replaceAll(" ", "_").toLowerCase() },
-            })),
-          },
-        },
-      });
+      // console.log("CreatedRecipe:\n", createdRecipe, "\n\n");
 
-      console.log("CreatedRecipe:\n", createdRecipe, "\n\n");
+      // responseArray.push(recipeGPT);
 
-      responseArray.push(recipeGPT);
+      // console.log("Response Array", responseArray);
+      // return NextResponse.json(responseSchema.parse(responseArray), {
+      //   status: 200,
+      // });
 
-      console.log("Response Array", responseArray);
-      return NextResponse.json(responseSchema.parse(responseArray), {
-        status: 200,
-      });
+      return NextResponse.json(responseSchema.parse({ recipes: [] }), {status:404})
     }
 
     return NextResponse.json(responseSchema.parse({ recipes: responseArray }), {
