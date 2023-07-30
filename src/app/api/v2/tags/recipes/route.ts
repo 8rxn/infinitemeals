@@ -31,8 +31,6 @@ export async function POST(req: Request, res: NextResponse) {
 
   try {
     const body = await req.json();
-
-    console.log(body.json);
     const { tag } = reqSchema.parse(body.json);
 
     const recipes =
@@ -42,6 +40,9 @@ export async function POST(req: Request, res: NextResponse) {
               tags: true,
             },
             distinct: ["name"],
+            orderBy: {
+              id: "desc",
+            }
           })
         : await prisma.recipe.findMany({
             where: {

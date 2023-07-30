@@ -3,9 +3,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { Balancer } from "react-wrap-balancer";
 import { ContextProvider } from "./Providers";
 import Image from "next/image";
-import { z } from "zod";
+import { set, z } from "zod";
 import Link from "next/link";
+import { Link as LinkIcon } from "lucide-react";
 import { Loader2 } from "lucide-react";
+import Button from "./ui/Button";
 
 type Props = {};
 const reqSchema = z.object({
@@ -15,15 +17,38 @@ const reqSchema = z.object({
 
 const Recipe = (props: Props) => {
   const { recipe } = useContext(ContextProvider);
+  const [copyText, setCopyText] = useState<"Copy Link" | "Copied">("Copy Link");
   useEffect(() => {
     const fetchImage = async () => {
       console.log("fetching image");
-      const response = await fetch("/api/v1/get-image", {
+      let response = await fetch("/api/v2/images/database", {
         method: "POST",
         body: JSON.stringify(
           reqSchema.parse({ name: recipe?.name || "", id: recipe?.id || "" })
         ),
       });
+
+      if (response.status == 404) {
+        response = await fetch("/api/v2/images/search", {
+          method: "POST",
+          body: JSON.stringify(
+            reqSchema.parse({ name: recipe?.name || "", id: recipe?.id || "" })
+          ),
+        });
+
+        const resGpt = await response.json();
+
+        console.log(resGpt);
+
+        response = await fetch("/api/v2/images/update-image-db", {
+          method: "POST",
+          body: JSON.stringify({
+            result: resGpt.result,
+            id: recipe?.id || "",
+            name: recipe?.name || "",
+          }),
+        });
+      }
 
       const img: { url: string; source: string; domain: string } =
         await response.json();
@@ -32,7 +57,7 @@ const Recipe = (props: Props) => {
     if (recipe?.id) {
       fetchImage();
     }
-    if(recipe==null){
+    if (recipe == null) {
       setImg({
         url: "/burger-placeholder.webp",
         source: "https://openai.com/dall-e-2",
@@ -100,7 +125,10 @@ const Recipe = (props: Props) => {
             <Balancer>
               Image From{" "}
               <span className="text-[#FF0B55]  dark:text-blue-500 underline underline-offset-8 cursor-pointer ">
-                <a href={img.source} target="_blank" rel="noreferrer">{img.domain}</a> <br />
+                <a href={img.source} target="_blank" rel="noreferrer">
+                  {img.domain}
+                </a>{" "}
+                <br />
               </span>
               <span className="underline underline-offset-8 cursor-pointer mt-6 ">
                 Report Error
@@ -164,9 +192,27 @@ const Recipe = (props: Props) => {
           </span>
         </Balancer>
       </h2>
-      <p className="sm:text-3xl text-lg text-slate-800 dark:text-slate-300">
+      <p className="sm:text-3xl text-lg text-slate-800 dark:text-slate-300 mb-4">
         <Balancer className="italic">Bon Appetit!</Balancer>
       </p>
+      <Button
+        size={"lg"}
+        onClick={() => {
+          navigator.clipboard.writeText(
+            "https://infinitemeals.vercel.app/recipes/" + recipe.id
+          );
+          setCopyText("Copied");
+          setTimeout(() => {
+            setCopyText("Copy Link");
+          }, 1000);
+        }}
+      >
+        {" "}
+        {copyText}
+        <span className="ml-6">
+          <LinkIcon />
+        </span>{" "}
+      </Button>
     </div>
   );
 };

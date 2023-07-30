@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/server/auth";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/server/db";
+import { Configuration, OpenAIApi } from "openai-edge";
 
 const responseSchema = z.object({
   name: z.string(),
@@ -27,67 +27,44 @@ export async function POST(req: Request, res: NextResponse) {
 
   try {
     const jsonReq = await req.json();
+    const { name } = reqSchema.parse(jsonReq.json);
 
-    console.log(
-      "\n\n====================\n\n",
-      "jsonReq : \n { name: ",
-      jsonReq.name,
-      ", \nid: ",
-      jsonReq.id,
-      "}\n\n====================\n\n"
-    );
-    const imgFromDB = await prisma.recipe.findFirst({
-      where: {
-        OR: [
-          {
-            name: jsonReq.name,
-          },
-          {
-            id: jsonReq.id,
-          },
-        ],
-      },
-      select: {
-        imgUrl: true,
-        imgDomain: true,
-        imgSource: true,
-      },
+    const configuration = new Configuration({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+    const openai = new OpenAIApi(configuration);
+
+    const response = await openai.createImage({
+      prompt: "A food image of " + name,
+      n: 1,
+      size: "256x256",
     });
 
-    console.log(
-      "\n\n====================\n\n",
-      "imgFromDB \n ",
-      imgFromDB,
-      "\n\n====================\n\n"
-    );
+    console.log("\n\n\nFetched using DALLE API \n\n\n");
 
-    if (imgFromDB?.imgUrl === null) {
+    if (!response) {
       return NextResponse.json(
-        { error: "Image Not in database" },
+        { error: "Something Went Wrong" },
         { status: 404 }
       );
     }
 
+    const res = await response.json();
+    const url = res.data.data[0].url;
+
     return NextResponse.json(
       responseSchema.parse({
-        name: jsonReq.name,
-        url: imgFromDB?.imgUrl,
-        domain: imgFromDB?.imgDomain,
-        source: imgFromDB?.imgSource,
+        name: name,
+        url: url,
+        source: "https://openai.com/blog/dall-e/",
+        domain: "DALL-E",
       }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
+      { status: 200 }
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });
     }
-
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

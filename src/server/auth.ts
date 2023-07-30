@@ -13,11 +13,11 @@ function getDiscordCredentials(): { clientId: string; clientSecret: string } {
   const clientId = process.env.DISCORD_CLIENT_ID;
   const clientSecret = process.env.DISCORD_CLIENT_SECRET;
   if (!clientId || clientId.length === 0) {
-    throw new Error("Missing GOOGLE_CLIENT_ID");
+    throw new Error("Missing DISCORD_CLIENT_ID");
   }
 
   if (!clientSecret || clientSecret.length === 0) {
-    throw new Error("Missing GOOGLE_CLIENT_SECRET");
+    throw new Error("Missing DISCORD_CLIENT_SECRET");
   }
 
   return { clientId, clientSecret };

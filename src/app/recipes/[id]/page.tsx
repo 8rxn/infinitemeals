@@ -1,7 +1,7 @@
 import RecipeDetails from "@/components/RecipeDetails";
 import Button from "@/components/ui/Button";
 import { authOptions } from "@/server/auth";
-import { Twitter } from "lucide-react";
+import { Twitter, Link } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -29,9 +29,20 @@ const page = async (props: Props) => {
         <Balancer>Food is love, food is life</Balancer>
       </p>
 
-      <a href="https://twitter.com/rajxryan" rel="noreferrer" target="_blank">
-      <Button size={"lg"}> Spread Love <span className="ml-6"><Twitter/></span> </Button>
+      <a
+        href={`https://twitter.com/intent/tweet?text=Hey%20everyone,%0ACheckout%20InfiniteMeals,%20where%20you%20can%20get%20any%20recipe%20known%20to%20you.%0A%0A%0Ahttps://infinitemeals.vercel.app%0A%0ASpread%20Love%20%E2%99%A5`}
+        rel="noreferrer"
+        target="_blank"
+      >
+        <Button size={"lg"}>
+          {" "}
+          Spread Love{" "}
+          <span className="ml-6">
+            <Twitter />
+          </span>{" "}
+        </Button>
       </a>
+
       <div className="mt-28">
         <RecipeDetails id={props.params.id} />
       </div>

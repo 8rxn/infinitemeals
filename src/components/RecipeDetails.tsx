@@ -16,7 +16,7 @@ function RecipeDetails({ id }: Props) {
   useEffect(() => {
     const fetchRecipeById = async () => {
       setLoading(true);
-      const res = await fetch("/api/v1/get-recipe-by-id", {
+      const res = await fetch("/api/v2/recipes/uid", {
         method: "POST",
         body: SuperJSON.stringify({ id: id }),
       });

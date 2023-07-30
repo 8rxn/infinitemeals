@@ -15,14 +15,14 @@ const RecipeFetchWrapper = (props: Props) => {
   const fetchData = async (food: string, nationality?: string) => {
     setRecipe(null);
     setIsLoading(true);
-    let res = await fetch("/api/v1/get-recipe", {
+    let res = await fetch("/api/v2/recipes/database", {
       method: "POST",
       body: SuperJSON.stringify({ name: food, nationality }),
     });
 
     if (res.status == 404) {
       setStatus(true)
-      res = await fetch("/api/v1/get-recipe-by-ai", {
+      res = await fetch("/api/v2/recipes/completion", {
         method: "POST",
         body: SuperJSON.stringify({ name: food, nationality }),
       });
@@ -34,7 +34,7 @@ const RecipeFetchWrapper = (props: Props) => {
       console.log(recipe)
       setStatus(false)
       setIsLoading(false);
-        res = await fetch("/api/v1/update-recipe-by-ai", {
+        res = await fetch("/api/v2/recipes/update-recipe-by-ai", {
           method: "POST",
           body: SuperJSON.stringify(resGpt),
         });

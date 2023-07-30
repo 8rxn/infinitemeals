@@ -13,6 +13,7 @@ const responseSchema = z.object({
 
 const reqSchema = z.object({
   name: z.string().max(1000),
+  id: z.string(),
 });
 
 export async function POST(req: Request, res: NextResponse) {
@@ -28,22 +29,24 @@ export async function POST(req: Request, res: NextResponse) {
   try {
     const jsonReq = await req.json();
 
+    const { name, id } = reqSchema.parse(jsonReq);
+
     console.log(
       "\n\n====================\n\n",
       "jsonReq : \n { name: ",
-      jsonReq.name,
+      name,
       ", \nid: ",
-      jsonReq.id,
+      id,
       "}\n\n====================\n\n"
     );
     const imgFromDB = await prisma.recipe.findFirst({
       where: {
         OR: [
           {
-            name: jsonReq.name,
+            name: name,
           },
           {
-            id: jsonReq.id,
+            id: id,
           },
         ],
       },
@@ -70,7 +73,7 @@ export async function POST(req: Request, res: NextResponse) {
 
     return NextResponse.json(
       responseSchema.parse({
-        name: jsonReq.name,
+        name: name,
         url: imgFromDB?.imgUrl,
         domain: imgFromDB?.imgDomain,
         source: imgFromDB?.imgSource,

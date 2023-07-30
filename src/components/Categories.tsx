@@ -18,7 +18,7 @@ const Categories = (props: Props) => {
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
-      const res = await fetch("/api/v1/get-tags", {
+      const res = await fetch("/api/v2/tags/get-tags", {
         method: "GET",
       });
 
@@ -44,7 +44,7 @@ const Categories = (props: Props) => {
     setTags([...tags, category]);
     setLoading(true);
     try {
-      const res = await fetch("/api/v1/create-tag", {
+      const res = await fetch("/api/v2/tags/create", {
         method: "POST",
         body: JSON.stringify({ tag: category }),
       });

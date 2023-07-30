@@ -3,6 +3,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import SuperJSON from "superjson";
 import ImageFetchWrapper from "./ImageFetchWrapper";
+import Balancer from "react-wrap-balancer";
 type Props = {
   tag: string;
 };
@@ -19,24 +20,31 @@ const FoodCards = (props: Props) => {
       ]
     | []
   >([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<
+    | "loading"
+    | ""
+    | "Fetching A Recipe From Text Davinci 003"
+    | "Getting Recipe into our Database"
+  >("");
   useEffect(() => {
     const fetchRecipes = async () => {
-      setLoading(true);
-      let res = await fetch("/api/v1/get-recipes-by-tag", {
+      setLoading("loading");
+      let res = await fetch("/api/v2/tags/recipes", {
         method: "POST",
         body: SuperJSON.stringify({ tag: props.tag }),
       });
       if (res.status == 404) {
-        res = await fetch("/api/v1/get-recipe-by-tag-ai", {
+        setLoading("Fetching A Recipe From Text Davinci 003")
+        res = await fetch("/api/v2/tags/recipes/completion", {
           method: "POST",
           body: SuperJSON.stringify({ tag: props.tag }),
         });
 
         const resGpt = await res.json();
         console.log(resGpt);
-
-        res = await fetch("/api/v1/update-recipe-by-ai", {
+        
+        setLoading("Getting Recipe into our Database")
+        res = await fetch("/api/v2/recipes/update-recipe-by-ai", {
           method: "POST",
           body: SuperJSON.stringify(resGpt),
         });
@@ -45,9 +53,14 @@ const FoodCards = (props: Props) => {
         console.log(recipe);
 
         setFood([
-          { id: recipe.id, name: recipe.name, tags: recipe.tagsRelated, imgUrl: recipe.imgUrl },
+          {
+            id: recipe.id,
+            name: recipe.name,
+            tags: recipe.tagsRelated,
+            imgUrl: recipe.imgUrl,
+          },
         ]);
-        setLoading(false);
+        setLoading("");
 
         return;
       }
@@ -57,14 +70,23 @@ const FoodCards = (props: Props) => {
 
       console.log(foodFetched);
       setFood(foodFetched);
-      setLoading(false);
+      setLoading("");
     };
     fetchRecipes();
   }, [props.tag]);
   return (
     <div className="flex flex-wrap w-fit sm:w-full justify-between gap-8  mt-8 mx-auto">
       {loading ? (
-        <Loader2 className="w-10 h-10 m-auto animate-spin"></Loader2>
+        <div className="w-full">
+          <Loader2 className="w-10 h-10 m-auto animate-spin"></Loader2>
+          <p
+            className={`text-sm font-semibold max-w-sm mx-auto col-span-full ${
+              loading != "loading" ? "opacity-100" : "opacity-0"
+            } transition-opacity duration-500 ease-out`}
+          >
+            <Balancer>{loading}</Balancer>
+          </p>
+        </div>
       ) : (
         <>
           {food?.length > 0 ? (
@@ -73,14 +95,12 @@ const FoodCards = (props: Props) => {
                 <ImageFetchWrapper
                   name={foodItem.name}
                   id={foodItem.id}
-                  tags={foodItem.tags}
                   imgUrl={foodItem.imgUrl}
                 />
               ) : (
                 <ImageFetchWrapper
                   name={foodItem.name}
                   id={foodItem.id}
-                  tags={foodItem.tags}
                 />
               )
             )

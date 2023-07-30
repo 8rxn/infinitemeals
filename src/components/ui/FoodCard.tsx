@@ -10,7 +10,6 @@ import { z } from "zod";
 type Props = {
   name: string;
   id: string;
-  tags: string[];
   imgUrl?: string;
   fetchImage: (name: string, id: string) => Promise<void>;
 };
@@ -21,14 +20,11 @@ const reqSchema = z.object({
 });
 
 const FoodCard = (props: Props) => {
-  const [imgUrl, setImgUrl] = useState("");
 
   useEffect(() => {
     if (!props.imgUrl) {
       props.fetchImage(props.name, props.id);
-    } else {
-      setImgUrl(props.imgUrl);
-    }
+    } 
   }, [props.id, props.imgUrl, props.name]);
   return (
     <Link
@@ -37,10 +33,10 @@ const FoodCard = (props: Props) => {
         "  xl:w-[25%] lg:w-[27%] mx-auto sm:mx-4 relative block overflow-hidden rounded-b-sm w-[40%] max-[500px]:w-[60vw] group rounded-lg bg-slate-100 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-600 "
       }
     >
-      {imgUrl ? (
+      {props.imgUrl ? (
         <>
           <Image
-            src={imgUrl || ""}
+            src={props.imgUrl || ""}
             width={256}
             height={256}
             alt=""

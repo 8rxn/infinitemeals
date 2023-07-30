@@ -28,7 +28,7 @@ export async function POST(req: Request, res: NextResponse) {
 
     const body =  await req.json()
     
-    const {tag}:{tag:string} = body
+    const {tag} = reqSchema.parse(body)
 
     const tagExists = await prisma.tags.findFirst({
         where:{
@@ -39,7 +39,7 @@ export async function POST(req: Request, res: NextResponse) {
     console.log("\n\n\n\nTagExists?:",tagExists)
 
     if(tagExists!==null){
-      return NextResponse.error()
+      return NextResponse.json({error:"Tag Already Exists"},{status:400})
     }
     
     const tagCreated = await prisma.tags.create(
