@@ -9,9 +9,9 @@ const responseSchema = z.object({
 
 export async function GET(req: Request, res: NextResponse) {
   try {
-    const cachedTags = responseSchema.parse(await redis.get("tags"));
+    const cachedTags = await redis.get("tags");
     if (cachedTags) {
-      return NextResponse.json(cachedTags, {
+      return NextResponse.json(responseSchema.parse(cachedTags), {
         status: 200,
       });
     }

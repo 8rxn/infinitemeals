@@ -23,10 +23,10 @@ export async function POST(req: Request, res: NextResponse) {
 
     const { name, id } = reqSchema.parse(jsonReq);
 
-    const cachedImg = responseSchema.parse(await redis.get("img_" + name));
+    const cachedImg = await redis.get("img_" + name);
 
     if (cachedImg) {
-      return NextResponse.json(cachedImg, {
+      return NextResponse.json(responseSchema.parse(cachedImg), {
         status: 200,
       });
     }

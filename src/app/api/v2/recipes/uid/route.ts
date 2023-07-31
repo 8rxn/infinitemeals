@@ -21,8 +21,7 @@ export async function POST(req: Request, res: NextResponse) {
     const body = await req.json();
     const { id } = reqSchema.parse(body.json);
 
-    const cachedRecipe = responseSchema.parse(await redis.get(id));
-    console.log("\n\n===============\n\ncachedRecipe: ", typeof cachedRecipe);
+    const cachedRecipe = await redis.get(id);
 
     // const validCachedRecipe = cachedRecipe
     //   .replaceAll("name", '"name"')
@@ -36,7 +35,7 @@ export async function POST(req: Request, res: NextResponse) {
     // console.log("parsed:\n\n\n", JSON.parse(cachedRecipe));
 
     if (cachedRecipe) {
-      return NextResponse.json(cachedRecipe, {
+      return NextResponse.json(responseSchema.parse(cachedRecipe), {
         status: 200,
       });
     }

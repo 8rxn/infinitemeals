@@ -43,10 +43,10 @@ export async function POST(req: Request, res: NextResponse) {
       "\n\n ===================\n\n"
     );
 
-    const cachedRecipe = responseSchema.parse(await redis.get(name));
+    const cachedRecipe = await redis.get(name);
 
     if (cachedRecipe) {
-      return NextResponse.json(cachedRecipe, {
+      return NextResponse.json(responseSchema.parse(cachedRecipe), {
         status: 200,
       });
     }
