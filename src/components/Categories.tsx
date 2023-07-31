@@ -88,7 +88,7 @@ const Categories = (props: Props) => {
           {tags &&
             tags?.map((tag: string) => (
               <Link href={"/categories/" + tag} key={tag}>
-                <p className="sm:text-2xl inline-block text-base hover:brightness-125 text-[#FF0B55] dark:text-blue-500 underline underline-offset-8 cursor-pointer capitalize">
+                <p className="sm:text-2xl inline-block text-base text-[#FF0B55] dark:text-blue-500 underline underline-offset-8 cursor-pointer capitalize hover:bg-slate-900/5  dark:hover:backdrop-brightness-110  dark:hover:bg-slate-100/10  transition ">
                   <Balancer>{tag.replaceAll("_", " ")}</Balancer>
                 </p>
               </Link>

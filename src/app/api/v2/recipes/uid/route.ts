@@ -1,8 +1,8 @@
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { array, z } from "zod";
-import { authOptions } from "@/server/auth";
+import { redis } from "@/server/redis";
+import { Recipe } from "@prisma/client";
 
 const responseSchema = z.object({
   id: z.string(),
@@ -17,18 +17,29 @@ const reqSchema = z.object({
 });
 
 export async function POST(req: Request, res: NextResponse) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return NextResponse.json(
-      { error: "You need to be logged in to request data" },
-      { status: 401 }
-    );
-  }
-
   try {
     const body = await req.json();
     const { id } = reqSchema.parse(body.json);
+
+    const cachedRecipe = responseSchema.parse(await redis.get(id));
+    console.log("\n\n===============\n\ncachedRecipe: ", typeof cachedRecipe);
+
+    // const validCachedRecipe = cachedRecipe
+    //   .replaceAll("name", '"name"')
+    //   .replaceAll("id", '"id"')
+    //   .replaceAll("ingredients", '"ingredients"')
+    //   .replaceAll("instructions", '"instructions"')
+    //   .replaceAll("tagsRelated", '"tagsRelated"');
+
+    // console.log("\n\n===============\n\nvalidCachedRecipe: ", validCachedRecipe);
+
+    // console.log("parsed:\n\n\n", JSON.parse(cachedRecipe));
+
+    if (cachedRecipe) {
+      return NextResponse.json(cachedRecipe, {
+        status: 200,
+      });
+    }
 
     const recipe = await prisma.recipe.findFirst({
       where: {
@@ -45,8 +56,6 @@ export async function POST(req: Request, res: NextResponse) {
       return NextResponse.json({ error: "Recipe not found" }, { status: 404 });
     }
 
-    console.log("===============\nRecipe: by ID: \n\n\n",recipe)
-
     const responseJSON = {
       id: recipe.id,
       name: recipe.name,
@@ -54,6 +63,13 @@ export async function POST(req: Request, res: NextResponse) {
       instructions: recipe.steps.map((step) => step.step),
       tagsRelated: recipe.tags.map((tag) => tag.name),
     };
+
+    const cachedData = await redis.set(
+      `${recipe.id}`,
+      JSON.stringify(responseJSON)
+    );
+
+    console.log("\n\n===============\n\ncachedData: ", cachedData);
 
     return NextResponse.json(responseSchema.parse(responseJSON), {
       status: 200,

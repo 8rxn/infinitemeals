@@ -3,6 +3,7 @@ import { authOptions } from "@/server/auth";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/server/db";
+import { redis } from "@/server/redis";
 
 const responseSchema = z.object({
   name: z.string(),
@@ -17,19 +18,18 @@ const reqSchema = z.object({
 });
 
 export async function POST(req: Request, res: NextResponse) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return NextResponse.json(
-      { error: "You need to be logged in to request data" },
-      { status: 401 }
-    );
-  }
-
   try {
     const jsonReq = await req.json();
 
     const { name, id } = reqSchema.parse(jsonReq);
+
+    const cachedImg = responseSchema.parse(await redis.get("img_" + name));
+
+    if (cachedImg) {
+      return NextResponse.json(cachedImg, {
+        status: 200,
+      });
+    }
 
     console.log(
       "\n\n====================\n\n",
@@ -71,6 +71,13 @@ export async function POST(req: Request, res: NextResponse) {
       );
     }
 
+    await redis.set("img_" + name, {
+      name: name,
+      url: imgFromDB?.imgUrl,
+      domain: imgFromDB?.imgDomain,
+      source: imgFromDB?.imgSource,
+    });
+
     return NextResponse.json(
       responseSchema.parse({
         name: name,
@@ -80,10 +87,6 @@ export async function POST(req: Request, res: NextResponse) {
       }),
       {
         status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
       }
     );
   } catch (error) {

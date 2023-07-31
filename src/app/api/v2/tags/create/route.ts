@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { z } from "zod";
 import { authOptions } from "@/server/auth";
+import { redis } from "@/server/redis";
 
 const responseSchema = z.object({
   tag: z.string(),
@@ -49,6 +50,8 @@ export async function POST(req: Request, res: NextResponse) {
             }
         }
     )
+
+    await redis.expire("tags",0)
 
     return NextResponse.json(responseSchema.parse({tag: tagCreated.name}), {
       status: 200,

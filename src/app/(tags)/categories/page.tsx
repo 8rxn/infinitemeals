@@ -1,12 +1,12 @@
 import { authOptions } from "@/server/auth";
 import { getServerSession } from "next-auth";
 import { Balancer } from "react-wrap-balancer";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import Categories from "@/components/Categories";
 
 const Category = async () => {
   const user = await getServerSession(authOptions);
-  if (!user) return notFound();
+  if (!user) redirect("/login");
   return (
     <div className="text-center flex flex-col items-center gap-4 pb-20">
       <h1 className="font-bold text-5xl sm:text-7xl ">

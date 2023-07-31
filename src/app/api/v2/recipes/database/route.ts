@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { array, z } from "zod";
 import { authOptions } from "@/server/auth";
-import { Configuration, OpenAIApi } from "openai";
+import { redis } from "@/server/redis";
 
 const responseSchema = z.object({
   id: z.string(),
@@ -42,6 +42,14 @@ export async function POST(req: Request, res: NextResponse) {
       nationality,
       "\n\n ===================\n\n"
     );
+
+    const cachedRecipe = responseSchema.parse(await redis.get(name));
+
+    if (cachedRecipe) {
+      return NextResponse.json(cachedRecipe, {
+        status: 200,
+      });
+    }
 
     const recipe =
       nationality == ""
@@ -102,6 +110,8 @@ export async function POST(req: Request, res: NextResponse) {
         }
       );
     }
+
+    const cachedData = await redis.set(name, recipe);
 
     console.log(recipe.tags.map((tag) => tag.name));
 

@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react"
 
 
 
-const SignInButton:FC<ButtonProps> = ({children, ...props}) => {
+const SignOutButton:FC<ButtonProps> = ({children, ...props}) => {
   return (
     <Button {...props} onClick={()=>{signOut()}} >
         {children}
@@ -14,4 +14,4 @@ const SignInButton:FC<ButtonProps> = ({children, ...props}) => {
   )
 }
 
-export default SignInButton
+export default SignOutButton

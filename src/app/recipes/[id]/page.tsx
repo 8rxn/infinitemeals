@@ -1,9 +1,6 @@
 import RecipeDetails from "@/components/RecipeDetails";
 import Button from "@/components/ui/Button";
-import { authOptions } from "@/server/auth";
 import { Twitter, Link } from "lucide-react";
-import { getServerSession } from "next-auth";
-import { notFound } from "next/navigation";
 import React from "react";
 import Balancer from "react-wrap-balancer";
 
@@ -14,8 +11,6 @@ type Props = {
 };
 
 const page = async (props: Props) => {
-  const user = await getServerSession(authOptions);
-  if (!user) return notFound();
 
   return (
     <div className="text-center flex flex-col items-center gap-4 pb-20 ">

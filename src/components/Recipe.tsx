@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Balancer } from "react-wrap-balancer";
 import { ContextProvider } from "./Providers";
 import Image from "next/image";
-import { set, z } from "zod";
+import { z } from "zod";
 import Link from "next/link";
 import { Link as LinkIcon } from "lucide-react";
 import { Loader2 } from "lucide-react";
@@ -36,6 +36,9 @@ const Recipe = (props: Props) => {
           ),
         });
 
+        if(response.status==401){
+          setImg({url:"/burger-placeholder.webp","source":"https://openai.com/dall-e-2","domain":"DALL-E"})
+        }
         const resGpt = await response.json();
 
         console.log(resGpt);

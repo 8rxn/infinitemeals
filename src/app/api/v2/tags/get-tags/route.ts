@@ -1,41 +1,37 @@
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { array, z } from "zod";
-import { authOptions } from "@/server/auth";
+import { redis } from "@/server/redis";
 
 const responseSchema = z.object({
   tags: array(z.string()).optional(),
 });
 
-
-
 export async function GET(req: Request, res: NextResponse) {
-  const session = await getServerSession(authOptions);
-   if (!session) {
-    return NextResponse.json(
-      { error: "You need to be logged in to request data" },
-      { status: 401 }
-    );
-  }
-
   try {
-    
-    const tags = await prisma.tags.findMany(
-        {
-            orderBy:{
-                recipes:{
-                    _count:"desc"
-                }
-            },
-            where: {
-                name: {not:""},
-              },
-            
-        }
-    )
+    const cachedTags = responseSchema.parse(await redis.get("tags"));
+    if (cachedTags) {
+      return NextResponse.json(cachedTags, {
+        status: 200,
+      });
+    }
+    const tags = await prisma.tags.findMany({
+      orderBy: {
+        recipes: {
+          _count: "desc",
+        },
+      },
+      where: {
+        name: { not: "" },
+      },
+    });
 
-    const responseJSON= {tags:tags.map((tag)=>{return tag.name})}
+    const responseJSON = {
+      tags: tags.map((tag) => {
+        return tag.name;
+      }),
+    };
+    await redis.set("tags",responseJSON);
 
     return NextResponse.json(responseSchema.parse(responseJSON), {
       status: 200,

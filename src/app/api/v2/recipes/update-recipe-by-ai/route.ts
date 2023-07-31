@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { array, z } from "zod";
+import { redis } from "@/server/redis";
 
 const responseSchema = z.object({
   id: z.string(),
@@ -15,7 +16,7 @@ const responseSchema = z.object({
 });
 
 const reqSchema = z.object({
-  id:z.string().optional(),
+  id: z.string().optional(),
   name: z.string(),
   ingredients: array(z.string()),
   instructions: array(z.string()),
@@ -29,7 +30,7 @@ const reqSchema = z.object({
 export async function POST(req: Request, res: NextResponse) {
   try {
     const recipe = await req.json();
-    const recipeGPT =  reqSchema.parse(recipe.json);
+    const recipeGPT = reqSchema.parse(recipe.json);
 
     console.log(
       "========= \n\n\n RecipeGPT[commonNames] \n\n\n ",
@@ -72,6 +73,9 @@ export async function POST(req: Request, res: NextResponse) {
     recipeGPT.id = createdRecipe.id;
 
     console.log("Created Recipe", createdRecipe);
+
+    await redis.set(recipeGPT.name, createdRecipe);
+    await redis.set(recipeGPT.id, createdRecipe);
 
     return NextResponse.json(responseSchema.parse(recipeGPT), {
       status: 200,

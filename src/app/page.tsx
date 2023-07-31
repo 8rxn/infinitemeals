@@ -15,14 +15,14 @@ export default function Home() {
         alt="Pizza"
         width={150}
         height={150}
-        className="rotate-[170deg] absolute -right-8 -bottom-12 opacity-80 sm:hidden block w-[70%] mix-blend-darken dark:mix-blend-lighten"
+        className="rotate-[170deg] fixed -right-8 -bottom-12 opacity-80 sm:hidden block w-[70%] mix-blend-darken dark:mix-blend-lighten"
       />
       <Image 
         src={"/pizzafloat.svg"}
         alt="Pizza"
         width={150}
         height={150}
-        className=" absolute -left-8 top-12 opacity-80 sm:hidden block w-[40%] mix-blend-darken dark:mix-blend-lighten"
+        className=" fixed -left-8 top-12 opacity-80 sm:hidden block w-[40%] mix-blend-darken dark:mix-blend-lighten"
       />
 
       <Hero />

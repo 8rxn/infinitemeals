@@ -1,8 +1,6 @@
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { array, z } from "zod";
-import { authOptions } from "@/server/auth";
 
 const responseSchema = z.object({
   recipes: z.array(
@@ -20,18 +18,12 @@ const reqSchema = z.object({
 });
 
 export async function POST(req: Request, res: NextResponse) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return NextResponse.json(
-      { error: "You need to be logged in to request data" },
-      { status: 401 }
-    );
-  }
 
   try {
     const body = await req.json();
     const { tag } = reqSchema.parse(body.json);
+
+    
 
     const recipes =
       tag === "all"

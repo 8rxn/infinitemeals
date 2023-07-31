@@ -58,6 +58,7 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
+
     
     async jwt({ token, user }) {
       const dbUser = await prisma.user.findFirst({
@@ -83,6 +84,9 @@ export const authOptions: NextAuthOptions = {
     },
   },
   adapter: PrismaAdapter(prisma),
+  pages:{
+    "signIn":"/login"
+  },
   providers: [
     DiscordProvider({
       clientId: getDiscordCredentials().clientId,

@@ -29,7 +29,10 @@ const ImageFetchWrapper = (props: Props) => {
           reqSchema.parse({ name: name || "", id: id || "" })
         ),
       });
-
+      if(res.status==401){
+        setImgUrl("/burger-placeholder.webp")
+        return
+      }
       const resGpt = await res.json();
 
       console.log(resGpt)
