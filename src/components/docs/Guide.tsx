@@ -26,7 +26,7 @@ const Guide = (props: Props) => {
           </Card>
           <Card link="/recipes">
             3. You can find recipes by going to the all recipes page and
-            selecting a recipe that you'd like.
+            selecting a recipe that you&apos;d like.
           </Card>
         </ul>
       </div>

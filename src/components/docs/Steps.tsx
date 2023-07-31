@@ -19,7 +19,7 @@ const Steps = (props: Props) => {
             recipe is searched for the first time, it is cached]
           </Card>
           <Card>
-            2. If unavailable in cache, it's looked for in the database.
+            2. If unavailable in cache, it&apos;s looked for in the database.
           </Card>
           <Card>
             3. If the recipe is still unavailable, Text - Davinci - 003 is used
