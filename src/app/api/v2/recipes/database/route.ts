@@ -111,7 +111,7 @@ export async function POST(req: Request, res: NextResponse) {
       );
     }
 
-    const cachedData = await redis.set(name, recipe);
+    await redis.set(name, recipe);
 
     console.log(recipe.tags.map((tag) => tag.name));
 

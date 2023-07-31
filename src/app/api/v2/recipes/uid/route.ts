@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { array, z } from "zod";
 import { redis } from "@/server/redis";
-import { Recipe } from "@prisma/client";
 
 const responseSchema = z.object({
   id: z.string(),
@@ -63,12 +62,10 @@ export async function POST(req: Request, res: NextResponse) {
       tagsRelated: recipe.tags.map((tag) => tag.name),
     };
 
-    const cachedData = await redis.set(
+    await redis.set(
       `${recipe.id}`,
       JSON.stringify(responseJSON)
     );
-
-    console.log("\n\n===============\n\ncachedData: ", cachedData);
 
     return NextResponse.json(responseSchema.parse(responseJSON), {
       status: 200,

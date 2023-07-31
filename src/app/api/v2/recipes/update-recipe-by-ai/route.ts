@@ -72,10 +72,8 @@ export async function POST(req: Request, res: NextResponse) {
 
     recipeGPT.id = createdRecipe.id;
 
-    console.log("Created Recipe", createdRecipe);
-
-    await redis.set(recipeGPT.name, createdRecipe);
-    await redis.set(recipeGPT.id, createdRecipe);
+    await redis.set(recipeGPT.name, recipeGPT);
+    await redis.set(recipeGPT.id, recipeGPT);
 
     return NextResponse.json(responseSchema.parse(recipeGPT), {
       status: 200,
