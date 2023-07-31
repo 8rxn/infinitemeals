@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import SuperJSON from "superjson";
 import ImageFetchWrapper from "./ImageFetchWrapper";
 import Balancer from "react-wrap-balancer";
+import { useRouter } from "next/navigation";
 type Props = {
   tag: string;
 };
 
 const FoodCards = (props: Props) => {
+  const router = useRouter();
   const [food, setFood] = useState<
     | [
         {
@@ -39,6 +41,12 @@ const FoodCards = (props: Props) => {
           method: "POST",
           body: SuperJSON.stringify({ tag: props.tag }),
         });
+        
+        if(res.status ==429) {
+          setLoading("");
+          router.push("/limited");
+
+        }
 
         const resGpt = await res.json();
         console.log(resGpt);

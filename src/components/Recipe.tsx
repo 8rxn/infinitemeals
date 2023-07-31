@@ -36,8 +36,12 @@ const Recipe = (props: Props) => {
           ),
         });
 
-        if(response.status==401){
-          setImg({url:"/burger-placeholder.webp","source":"https://openai.com/dall-e-2","domain":"DALL-E"})
+        if (response.status == 401) {
+          setImg({
+            url: "/burger-placeholder.webp",
+            source: "https://openai.com/dall-e-2",
+            domain: "DALL-E",
+          });
         }
         const resGpt = await response.json();
 
@@ -134,7 +138,13 @@ const Recipe = (props: Props) => {
                 <br />
               </span>
               <span className="underline underline-offset-8 cursor-pointer mt-6 ">
-                Report Error
+                <a
+                  href={`https://github.com/8rxn/infinitemeals/issues/new?title=Recipe:Error%20in%20page%20${recipe.name}&body=RecipeId:${recipe.id}+Explain+your+report`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Report Error
+                </a>
               </span>
             </Balancer>
           </h1>

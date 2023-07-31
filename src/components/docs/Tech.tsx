@@ -14,7 +14,7 @@ const Tech = () => {
             "Planet Scale - ServerLess MySQL DB",
             "Prisma - ORM",
             "Next Auth- Auth",
-            "Next.js 13.5 - Project",
+            "Next.js 13.4.9 - Project",
             "Vercel - Deployment"
           ].map((item, i) => (
             <Card key={i}>{item}</Card>

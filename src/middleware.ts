@@ -109,6 +109,7 @@ export const config = {
   matcher: [
     "/api/v2/recipes/completion",
     "/api/v2/recipes/update-recipe-by-ai",
+    "/api/v2/tags/recipes/completion",
     "/api/v2/images/update-image-db",
     "/api/v2/images/completion",
     "/api/v2/tags/create",

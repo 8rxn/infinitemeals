@@ -51,7 +51,7 @@ const Categories = (props: Props) => {
 
       if (res.status == 200) {
         setCategoryForm(false);
-      } else if (res.status == 500) {
+      } else {
         setTags(tags.filter((value) => value !== category));
       }
     } catch (err) {
