@@ -19,7 +19,7 @@ const login = async (props: Props) => {
     <div className="relative z-20 flex flex-col justify-center items-center h-screen ">
       <Link href="/" className="self-start ml-16">
         <Button
-          variant={"outline"}
+          variant={"default"}
           size={"sm"}
           className="flex gap-2  "
         >
