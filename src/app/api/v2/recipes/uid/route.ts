@@ -62,10 +62,7 @@ export async function POST(req: Request, res: NextResponse) {
       tagsRelated: recipe.tags.map((tag) => tag.name),
     };
 
-    await redis.set(
-      `${recipe.id}`,
-      JSON.stringify(responseJSON)
-    );
+    await redis.set(`${recipe.id}`, responseJSON);
 
     return NextResponse.json(responseSchema.parse(responseJSON), {
       status: 200,

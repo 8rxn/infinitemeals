@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { array, z } from "zod";
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi } from "openai-edge";
 
 const responseSchema = z.object({
   name: z.string(),
@@ -42,9 +42,9 @@ export async function POST(req: Request, res: NextResponse) {
       stop: ['"""'],
     });
 
-    console.log("response:\n", response.data.choices[0].text, "\n\n");
+    const responseJson = await response.json();
 
-    const responseAI = JSON.stringify(response.data.choices[0].text)
+    const responseAI = JSON.stringify(responseJson.choices[0].text)
       .replaceAll("\\n", "\n")
       .replaceAll("\\", "")
       .replaceAll('""', '"');

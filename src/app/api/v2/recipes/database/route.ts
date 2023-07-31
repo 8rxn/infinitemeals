@@ -111,7 +111,7 @@ export async function POST(req: Request, res: NextResponse) {
       );
     }
 
-    await redis.set(name, recipe);
+
 
     console.log(recipe.tags.map((tag) => tag.name));
 
@@ -125,6 +125,8 @@ export async function POST(req: Request, res: NextResponse) {
       imgDomain: recipe.imgDomain,
       imgSource: recipe.imgSource,
     };
+
+    await redis.set(name, responseJSON);
 
     return NextResponse.json(responseSchema.parse(responseJSON), {
       status: 200,

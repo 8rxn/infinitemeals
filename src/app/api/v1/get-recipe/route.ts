@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/server/db";
 import { array, z } from "zod";
 import { authOptions } from "@/server/auth";
-import { Configuration, OpenAIApi } from "openai";
 
 const responseSchema = z.object({
   id: z.string(),

@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/server/auth";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi } from "openai-edge";
 import { prisma } from "@/server/db";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -67,7 +67,9 @@ export async function POST(req: Request, res: NextResponse) {
         return NextResponse.json({ error: "No image found" }, { status: 404 });
       }
 
-      const url = response.data.data[0].url;
+      const responseJson= await response.json();
+
+      const url = responseJson.data[0].url;
 
       cloudinary.config({
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
