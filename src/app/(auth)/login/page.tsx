@@ -16,8 +16,8 @@ const login = async (props: Props) => {
     redirect("/dashboard");
   }
   return (
-    <div className="relative z-20 flex flex-col justify-center items-center h-screen ">
-      <Link href="/" className="self-start ml-16">
+    <div className="relative z-20 flex flex-col justify-center items-center h-screen max-w-4xl m-auto px-4  ">
+      <Link href="/" className="self-start sm:ml-16">
         <Button
           variant={"default"}
           size={"sm"}

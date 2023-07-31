@@ -1,15 +1,31 @@
-"use client"
-import { FC } from "react"
-import Button, { ButtonProps } from "./Button"
-import { signIn } from "next-auth/react"
+"use client";
+import { FC } from "react";
+import Button, { ButtonProps } from "./Button";
+import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
+const SignInButton: FC<ButtonProps> = ({ children, ...props }) => {
+  const { status } = useSession();
+  const router = useRouter();
 
-
-
-const SignInButton:FC<ButtonProps> = ({children, ...props}) => {
   return (
-    <Button {...props} onClick={()=>{signIn("discord")}} >
-        {children}<span className="ml-4">
+    <Button
+      {...props}
+      onClick={() => {
+        if (status == "authenticated") {
+          router.push("/dashboard");
+          return;
+        }
+        signIn("discord");
+      }}
+    >
+      {status == "authenticated" ? (
+        "Go To Dashboard"
+      ) : (
+        <>
+          {children}
+          <span className="ml-4">
             <svg
               width="20px"
               height="20px"
@@ -27,8 +43,10 @@ const SignInButton:FC<ButtonProps> = ({children, ...props}) => {
               </g>
             </svg>
           </span>
+        </>
+      )}
     </Button>
-  )
-}
+  );
+};
 
-export default SignInButton
+export default SignInButton;
