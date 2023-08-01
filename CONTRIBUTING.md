@@ -1,6 +1,6 @@
-# Contributing to the Next.js Open Source Project
+# Contributing to the InfiniteMeals Project
 
-Thank you for your interest in contributing to the Next.js Open Source Project! We appreciate your efforts to make this project better and welcome contributions from the community.
+Thank you for your interest in contributing to the InfiniteMeals Project! We appreciate your efforts to make this project better and welcome contributions from the community.
 
 ## How to Contribute
 
@@ -32,7 +32,7 @@ Writing clear and descriptive commit messages is essential for maintaining a cle
 
 ## Code Style and Guidelines
 
-The Next.js project follows specific coding guidelines and standards. Before submitting your contribution, ensure that your code adheres to these guidelines. For more details, refer to the [code style guide](CODE_STYLE.md) in the repository.
+The InfiniteMeals project follows specific coding guidelines and standards. Before submitting your contribution, ensure that your code adheres to these guidelines. For more details, refer to the [code style guide](CODE_STYLE.md) in the repository.
 
 ## Code of Conduct
 
