@@ -6,6 +6,8 @@ import Balancer from "react-wrap-balancer";
 import Button from "./ui/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Input from "./ui/Input";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -14,6 +16,9 @@ const Categories = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [categoryForm, setCategoryForm] = useState<boolean>(false);
+
+  const { status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -35,6 +40,10 @@ const Categories = (props: Props) => {
 
   const createCategory = async (category: string) => {
     if (!category) return;
+    if (status !== "authenticated") {
+      router.push("/login");
+      return;
+    }
     if (
       tags?.some((value) => {
         value === category;
@@ -51,6 +60,8 @@ const Categories = (props: Props) => {
 
       if (res.status == 200) {
         setCategoryForm(false);
+      } else if (res.status==429) {
+        router.push("/limited#");
       } else {
         setTags(tags.filter((value) => value !== category));
       }

@@ -5,7 +5,7 @@ import React from "react";
 
 const RateLimit = () => {
   return (
-    <div className="w-full h-full grid place-items-center relative z-20">
+    <div className="w-full h-full grid place-items-center relative z-20" id="">
       <h1 className="text-3xl font-bold">Rate Limit Exceeded</h1>
       <p className="text-sm font-light">
         Come Back After an hour <br />

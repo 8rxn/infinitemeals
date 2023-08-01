@@ -36,22 +36,22 @@ const FoodCards = (props: Props) => {
         body: SuperJSON.stringify({ tag: props.tag }),
       });
       if (res.status == 404) {
-        setLoading("Fetching A Recipe From Text Davinci 003")
+        setLoading("Fetching A Recipe From Text Davinci 003");
         res = await fetch("/api/v2/tags/recipes/completion", {
           method: "POST",
           body: SuperJSON.stringify({ tag: props.tag }),
         });
-        
-        if(res.status ==429) {
-          setLoading("");
-          router.push("/limited");
 
+        if (res.status == 429) {
+          setLoading("");
+          router.push("/limited#");
+          return;
         }
 
         const resGpt = await res.json();
         console.log(resGpt);
-        
-        setLoading("Getting Recipe into our Database")
+
+        setLoading("Getting Recipe into our Database");
         res = await fetch("/api/v2/recipes/update-recipe-by-ai", {
           method: "POST",
           body: SuperJSON.stringify(resGpt),
@@ -106,10 +106,7 @@ const FoodCards = (props: Props) => {
                   imgUrl={foodItem.imgUrl}
                 />
               ) : (
-                <ImageFetchWrapper
-                  name={foodItem.name}
-                  id={foodItem.id}
-                />
+                <ImageFetchWrapper name={foodItem.name} id={foodItem.id} />
               )
             )
           ) : (
