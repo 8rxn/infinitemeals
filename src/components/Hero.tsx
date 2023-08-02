@@ -19,7 +19,7 @@ const Hero = () => {
           </h2>
         </div>
 
-        <SignInButton variant={"default"}>Hop On</SignInButton>
+        <SignInButton variant={"default"}>Sign In to Search Recipes</SignInButton>
       </div>
   );
 };
