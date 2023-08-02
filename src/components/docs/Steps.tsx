@@ -4,8 +4,8 @@ type Props = {};
 
 const Steps = (props: Props) => {
   return (
-    <div className="mb-8">
-      <h2 className="text-3xl sm:text-4xl font-bold mb-4 underline-offset-8 underline">
+    <div className="mb-8 max-w-[80vw] mx-auto">
+      <h2 className="text-3xl sm:text-4xl font-bold mb-4 underline-offset-8 underline ">
         How does it Work?
       </h2>
       <div>

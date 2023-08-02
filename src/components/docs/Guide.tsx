@@ -7,7 +7,7 @@ type Props = {};
 
 const Guide = (props: Props) => {
   return (
-    <div className="mb-8">
+    <div className="mb-8 max-w-[80vw] mx-auto">
       <h2 className="text-3xl sm:text-4xl font-bold mb-4 underline underline-offset-8 ">
         How to Get Recipe?
       </h2>

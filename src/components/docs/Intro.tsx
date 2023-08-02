@@ -4,7 +4,7 @@ import Balancer from "react-wrap-balancer";
 
 const Intro = () => {
   return (
-    <div className="font-semibold">
+    <div className="font-semibold max-w-[80vw] mx-auto">
       <Link href={"/"}>
         <h2 className="text-3xl sm:text-5xl mb-8">
           <span className="inline-block mr-2 -translate-y-[50%] cursor-pointer ">
