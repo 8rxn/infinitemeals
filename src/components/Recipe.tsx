@@ -20,7 +20,7 @@ const Recipe = (props: Props) => {
   const [copyText, setCopyText] = useState<"Copy Link" | "Copied">("Copy Link");
   useEffect(() => {
     const fetchImage = async () => {
-      console.log("fetching image");
+      // console.log("fetching image");
       let response = await fetch("/api/v2/images/database", {
         method: "POST",
         body: JSON.stringify(
@@ -45,7 +45,7 @@ const Recipe = (props: Props) => {
         }
         const resGpt = await response.json();
 
-        console.log(resGpt);
+        // console.log(resGpt);
 
         response = await fetch("/api/v2/images/update-image-db", {
           method: "POST",

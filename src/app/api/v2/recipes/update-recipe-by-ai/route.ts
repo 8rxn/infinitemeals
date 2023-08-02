@@ -32,11 +32,11 @@ export async function POST(req: Request, res: NextResponse) {
     const recipe = await req.json();
     const recipeGPT = reqSchema.parse(recipe.json);
 
-    console.log(
-      "========= \n\n\n RecipeGPT[commonNames] \n\n\n ",
-      recipeGPT.commonNames,
-      "=================="
-    );
+    // console.log(
+    //   "========= \n\n\n RecipeGPT[commonNames] \n\n\n ",
+    //   recipeGPT.commonNames,
+    //   "=================="
+    // );
 
     const createdRecipe = await prisma.recipe.create({
       data: {

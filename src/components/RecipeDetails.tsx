@@ -22,7 +22,7 @@ function RecipeDetails({ id }: Props) {
       });
 
       const recipe = await res.json();
-      console.log(recipe);
+      // console.log(recipe);
       setRecipe(recipe);
       setLoading(false);
     };

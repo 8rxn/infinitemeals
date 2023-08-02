@@ -40,7 +40,7 @@ export async function POST(req: Request, res: NextResponse) {
       size: "256x256",
     });
 
-    console.log("\n\n\nFetched using DALLE API \n\n\n");
+    // console.log("\n\n\nFetched using DALLE API \n\n\n");
 
     if (!response) {
       return NextResponse.json(

@@ -20,20 +20,20 @@ export async function POST(req: Request, res: NextResponse) {
     const jsonReq = await req.json();
     const {name} = reqSchema.parse(jsonReq);
 
-    console.log(
-      "\n\n=======================\nFetched using Google Search API \n\n========================\n"
-    );
+    // console.log(
+    //   "\n\n=======================\nFetched using Google Search API \n\n========================\n"
+    // );
     const responseFetch = await fetch(
       `https://serpapi.com/search.json?engine=google_images&q=food+image+${name}&google_domain=google.com&gl=in&hl=en&api_key=${process.env.SERP_API_KEY}`
     );
 
     const response = await responseFetch.json();
 
-    console.log(
-      "\n\n=======================\n",
-      response["images_results"][0],
-      " \n\n========================\n"
-    );
+    // console.log(
+    //   "\n\n=======================\n",
+    //   response["images_results"][0],
+    //   " \n\n========================\n"
+    // );
 
     if (!response) {
       return NextResponse.json(

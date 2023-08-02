@@ -17,13 +17,13 @@ export default withAuth(
     if (request.nextUrl.pathname.startsWith("/api")) {
       const ip = request.ip ?? "127.0.0.1";
 
-      console.log("check if it works");
+      console.log("Middlware Ran Check");
 
       const { success, pending, limit, reset, remaining } =
         await ratelimit.limit(`ratelimit_middleware_${ip}`);
       event.waitUntil(pending);
 
-      if (success) console.log("it works!!!!");
+      if (success) console.log("Working Middleware!!!!");
 
       const res = success
         ? NextResponse.next()

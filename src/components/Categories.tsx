@@ -30,7 +30,7 @@ const Categories = (props: Props) => {
       const json = await res.json();
       const tagsFetched = json.tags;
 
-      console.log(tags);
+      // console.log(tags);
       setTags(tagsFetched);
       setLoading(false);
     };

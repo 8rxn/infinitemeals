@@ -37,10 +37,10 @@ export async function POST(req: Request) {
   try {
     const request = await req.json();
 
-    console.log(
-      "=================\n\n request \n\n==================\n\n",
-      request
-    );
+    // console.log(
+    //   "=================\n\n request \n\n==================\n\n",
+    //   request
+    // );
     
     const { result, id, name } = reqSchema.parse(request);
 
@@ -99,12 +99,12 @@ export async function POST(req: Request) {
       }
     );
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });
     }
 
-    console.log(error);
+    // console.log(error);
 
     return NextResponse.json(
       { error: "Internal Server Error" },

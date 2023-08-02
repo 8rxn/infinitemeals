@@ -26,16 +26,16 @@ export async function POST(req: Request, res: NextResponse) {
   try {
     const body = await req.json();
     const { name, nationality } = reqSchema.parse(body.json);
-    console.log(
-      "\n\n ===================\n\n",
-      "Name: ",
-      name,
-      "\nNationality:",
-      nationality,
-      "\n\n ===================\n\n"
-    );
+    // console.log(
+    //   "\n\n ===================\n\n",
+    //   "Name: ",
+    //   name,
+    //   "\nNationality:",
+    //   nationality,
+    //   "\n\n ===================\n\n"
+    // );
 
-    console.log("Trying on GPT-3");
+    // console.log("Trying on GPT-3");
     const openai = new OpenAIApi(configuration);
 
     const response = await openai.createCompletion({
@@ -51,13 +51,13 @@ export async function POST(req: Request, res: NextResponse) {
       stop: ['"""'],
     });
 
-    console.log("\n\n\n============ Response\n===========\n\n", response);
+    // console.log("\n\n\n============ Response\n===========\n\n", response);
 
     const responseJson = await response.json();
-    console.log(
-      "\n\n\n============ Response JSON \n===========\n\n",
-      responseJson
-    );
+    // console.log(
+    //   "\n\n\n============ Response JSON \n===========\n\n",
+    //   responseJson
+    // );
 
     const responseAI = JSON.stringify(responseJson.choices[0].text)
       .replaceAll("\\n", "\n")
@@ -75,7 +75,7 @@ export async function POST(req: Request, res: NextResponse) {
       .replaceAll("commonNames:", '"commonNames":')
       .replaceAll(",\n", ",\n  ");
 
-    console.log("\n\n\n=====\njsondata\n\n", jsondata);
+    // console.log("\n\n\n=====\njsondata\n\n", jsondata);
 
     //   const jsondata = ` {
     //     "name": "Schezwan Fried Rice",
@@ -88,7 +88,7 @@ export async function POST(req: Request, res: NextResponse) {
 
     recipeGPT.commonNames.push(name);
 
-    console.log(recipeGPT);
+    // console.log(recipeGPT);
 
     return NextResponse.json(responseSchema.parse(recipeGPT), {
       status: 200,

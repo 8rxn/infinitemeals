@@ -71,7 +71,7 @@ export async function POST(req: Request, res: NextResponse) {
       });
     });
 
-    console.log("Response Array", responseArray);
+    // console.log("Response Array", responseArray);
 
     if (recipes.length === 0) {
       return NextResponse.json(responseSchema.parse({ recipes: [] }), {

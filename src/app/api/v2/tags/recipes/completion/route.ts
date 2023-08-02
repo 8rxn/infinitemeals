@@ -22,10 +22,10 @@ export async function POST(req: Request, res: NextResponse) {
   try {
     const body = await req.json();
 
-    console.log(body.json);
+    // console.log(body.json);
     const { tag } = reqSchema.parse(body.json);
 
-    console.log("Trying on Text Davinci - 3");
+    // console.log("Trying on Text Davinci - 3");
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
     });
@@ -48,7 +48,7 @@ export async function POST(req: Request, res: NextResponse) {
       .replaceAll("\\n", "\n")
       .replaceAll("\\", "")
       .replaceAll('""', '"');
-    console.log("responseAI:\n", responseAI, "\n\n");
+    // console.log("responseAI:\n", responseAI, "\n\n");
 
     const jsondata = responseAI
       .substring(0, responseAI.length - 1)
@@ -61,7 +61,7 @@ export async function POST(req: Request, res: NextResponse) {
       .replaceAll("commonNames:", '"commonNames":')
       .replaceAll(",\n", ",\n  ");
 
-    console.log("responseJSONDATA:\n", responseAI, "\n\n");
+    // console.log("responseJSONDATA:\n", responseAI, "\n\n");
 
     const recipeGPT = await JSON.parse(jsondata);
 
@@ -98,7 +98,7 @@ export async function POST(req: Request, res: NextResponse) {
     //   ],
     // };
 
-    console.log("responseGPT:\n", recipeGPT, "\n\n");
+    // console.log("responseGPT:\n", recipeGPT, "\n\n");
 
     return NextResponse.json(responseSchema.parse(recipeGPT), {
       status: 200,

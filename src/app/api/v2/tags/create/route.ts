@@ -37,7 +37,7 @@ export async function POST(req: Request, res: NextResponse) {
         }
     })
 
-    console.log("\n\n\n\nTagExists?:",tagExists)
+    // console.log("\n\n\n\nTagExists?:",tagExists)
 
     if(tagExists!==null){
       return NextResponse.json({error:"Tag Already Exists"},{status:400})

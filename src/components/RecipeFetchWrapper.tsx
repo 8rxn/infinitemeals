@@ -36,10 +36,10 @@ const RecipeFetchWrapper = (props: Props) => {
       }
       const resGpt = await res.json();
 
-      console.log(resGpt);
+      // console.log(resGpt);
 
       setRecipe(await resGpt);
-      console.log(recipe);
+      // console.log(recipe);
       setStatus(false);
       setIsLoading(false);
       res = await fetch("/api/v2/recipes/update-recipe-by-ai", {
@@ -50,13 +50,13 @@ const RecipeFetchWrapper = (props: Props) => {
 
     const data = await res.json();
 
-    console.log(data);
+    // console.log(data);
     if (data.error) {
       setIsLoading(false);
       return;
     }
     setRecipe(data);
-    console.log("Set recipe: ", recipe);
+    // console.log("Set recipe: ", recipe);
     setIsLoading(false);
   };
 

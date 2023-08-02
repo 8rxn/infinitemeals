@@ -31,14 +31,14 @@ export async function POST(req: Request, res: NextResponse) {
       });
     }
 
-    console.log(
-      "\n\n====================\n\n",
-      "jsonReq : \n { name: ",
-      name,
-      ", \nid: ",
-      id,
-      "}\n\n====================\n\n"
-    );
+    // console.log(
+    //   "\n\n====================\n\n",
+    //   "jsonReq : \n { name: ",
+    //   name,
+    //   ", \nid: ",
+    //   id,
+    //   "}\n\n====================\n\n"
+    // );
     const imgFromDB = await prisma.recipe.findFirst({
       where: {
         OR: [
@@ -57,12 +57,12 @@ export async function POST(req: Request, res: NextResponse) {
       },
     });
 
-    console.log(
-      "\n\n====================\n\n",
-      "imgFromDB \n ",
-      imgFromDB,
-      "\n\n====================\n\n"
-    );
+    // console.log(
+    //   "\n\n====================\n\n",
+    //   "imgFromDB \n ",
+    //   imgFromDB,
+    //   "\n\n====================\n\n"
+    // );
 
     if (imgFromDB?.imgUrl === null) {
       return NextResponse.json(

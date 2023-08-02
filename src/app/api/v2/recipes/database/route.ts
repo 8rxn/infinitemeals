@@ -34,14 +34,14 @@ export async function POST(req: Request, res: NextResponse) {
   try {
     const body = await req.json();
     const { name, nationality } = reqSchema.parse(body.json);
-    console.log(
-      "\n\n ===================\n\n",
-      "Name: ",
-      name,
-      "\nNationality:",
-      nationality,
-      "\n\n ===================\n\n"
-    );
+    // console.log(
+    //   "\n\n ===================\n\n",
+    //   "Name: ",
+    //   name,
+    //   "\nNationality:",
+    //   nationality,
+    //   "\n\n ===================\n\n"
+    // );
 
     const cachedRecipe = await redis.get(name);
 
@@ -102,7 +102,7 @@ export async function POST(req: Request, res: NextResponse) {
           });
 
     if (recipe?.id === undefined) {
-      console.log("Not Found");
+      // console.log("Not Found");
       return NextResponse.json(
         { name: "try-on-ai" },
         {
@@ -111,9 +111,6 @@ export async function POST(req: Request, res: NextResponse) {
       );
     }
 
-
-
-    console.log(recipe.tags.map((tag) => tag.name));
 
     const responseJSON = {
       id: recipe.id,

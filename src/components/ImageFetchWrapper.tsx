@@ -35,7 +35,7 @@ const ImageFetchWrapper = (props: Props) => {
       }
       const resGpt = await res.json();
 
-      console.log(resGpt)
+      // console.log(resGpt)
 
       res = await fetch("/api/v2/images/update-image-db", {
         method: "POST",

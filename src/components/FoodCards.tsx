@@ -49,7 +49,7 @@ const FoodCards = (props: Props) => {
         }
 
         const resGpt = await res.json();
-        console.log(resGpt);
+        // console.log(resGpt);
 
         setLoading("Getting Recipe into our Database");
         res = await fetch("/api/v2/recipes/update-recipe-by-ai", {
@@ -58,7 +58,7 @@ const FoodCards = (props: Props) => {
         });
 
         const recipe = await res.json();
-        console.log(recipe);
+        // console.log(recipe);
 
         setFood([
           {
@@ -76,7 +76,7 @@ const FoodCards = (props: Props) => {
       const json = await res.json();
       const foodFetched = await json.recipes;
 
-      console.log(foodFetched);
+      // console.log(foodFetched);
       setFood(foodFetched);
       setLoading("");
     };
