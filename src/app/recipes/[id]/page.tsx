@@ -1,6 +1,6 @@
 import RecipeDetails from "@/components/RecipeDetails";
 import Button from "@/components/ui/Button";
-import { Twitter, Link } from "lucide-react";
+import { Twitter} from "lucide-react";
 import React from "react";
 import Balancer from "react-wrap-balancer";
 

@@ -1,5 +1,12 @@
 import { DataProvider } from "@/components/Providers";
+import { Metadata } from "next";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Categories | InfiniteMeals",
+  description:
+    "Find out recipes by Categories. Create your own categories and add recipes to them with the power of Text-Davinci-003.",
+};
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (

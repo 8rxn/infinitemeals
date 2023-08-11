@@ -5,14 +5,17 @@ import Steps from "@/components/docs/Steps";
 import Tech from "@/components/docs/Tech";
 import Button from "@/components/ui/Button";
 import { Twitter } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Metadata } from "next";
 import React from "react";
 import Balancer from "react-wrap-balancer";
 
-type Props = {};
+export const metadata: Metadata = {
+  title: "Documentation | InfiniteMeals",
+  description:
+    "The Documentation on how to use InfiniteMeals. Also included the inner workings of the app.",
+};
 
-const Documentation = (props: Props) => {
+const Documentation = () => {
   return (
     <div className="flex flex-col 2xl:flex-row flex-wrap gap-8  justify-between mb-8 bg-slate-100 dark:bg-slate-900 p-8 sm:p-12 rounded-xl shadow-lg max-[500px]:pt-16 z-20 relative">
       <Intro />

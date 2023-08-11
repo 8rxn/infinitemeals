@@ -1,13 +1,16 @@
-import Button from "@/components/ui/Button";
-import { Twitter } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import Balancer from "react-wrap-balancer";
 
-type Props = {};
 
-const Features = (props: Props) => {
+export const metadata: Metadata = {
+  title: "Features | InfiniteMeals",
+  description: "InfiniteMeals offers multiple features to the user of the application. Find out more here.",
+};
+
+const Features = () => {
   return (
     <div className="flex flex-col 2xl:flex-row flex-wrap gap-8  justify-between mb-8">
       <Card src={"/burger.webp"} alt={"Burger"} href="/dashboard">

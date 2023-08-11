@@ -1,6 +1,11 @@
 import React from "react";
 import Image from "next/image";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Login | Infinite Meals",
+  description: "Enter the world of Infinite Meals, login with Discord",
+};
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className=" max-w-7xl m-auto dark:text-slate-100 text-slate-950 min-h-[100vh]">

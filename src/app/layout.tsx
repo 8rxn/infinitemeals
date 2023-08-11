@@ -10,7 +10,33 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Infinite Meals",
-  description: "Get a new meal idea every day",
+  description: "Get a new meal idea every day, Powered by Text-Davinci-003",
+  keywords: [
+    "Next.js",
+    "React",
+    "JavaScript",
+    "Open AI",
+    "Raj Aryan",
+    "Text-Davinci-003",
+    "AI",
+    "Food",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: "Infinite Meals",
+    url: "https://imeals.rajaryan.work/",
+    title: "Infinite Meals",
+    description: "Get a new meal idea every day, Powered by Text-Davinci-003",
+    images: "https://imeals.rajaryan.work/og.png",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Infinite Meals",
+    description: "Get a new meal idea every day, Powered by Text-Davinci-003",
+    creator: "@rajxryan",
+    images: ["https://imeals.rajaryan.work/og.png"],
+  },
+  category: "technology",
 };
 
 export default function RootLayout({
@@ -23,13 +49,15 @@ export default function RootLayout({
       lang="en"
       className={cn("bg-white text-slate-900 antialiased ", inter.className)}
     >
-      <body className={" antialiased bg-[#fff] dark:bg-gray-950 min-h-screen  overflow-x-hidden"}>
+      <body
+        className={
+          " antialiased bg-[#fff] dark:bg-gray-950 min-h-screen  overflow-x-hidden"
+        }
+      >
         <Providers>
-          <div className="w-screen m-auto ">
-            {children}
-          </div>
+          <div className="w-screen m-auto ">{children}</div>
           <Navbar />
-          <Footer/>
+          <Footer />
         </Providers>
       </body>
     </html>

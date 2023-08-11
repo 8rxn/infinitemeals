@@ -1,5 +1,12 @@
 import { DataProvider } from "@/components/Providers";
+import { Metadata } from "next";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Dashboard | InfiniteMeals",
+  description:
+    "Search for recipes for any food that you can think of. If we don't already have it, we'll find it for you.",
+};
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
