@@ -21,6 +21,9 @@ const reqSchema = z.object({
   nationality: z.string().max(1000),
 });
 
+
+export const runtime = 'edge'
+
 export async function POST(req: Request, res: NextResponse) {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -30,30 +33,6 @@ export async function POST(req: Request, res: NextResponse) {
   try {
     const body = await req.json();
     const { name, nationality } = reqSchema.parse(body.json);
-    // console.log(
-    //   "\n\n ===================\n\n",
-    //   "Name: ",
-    //   name,
-    //   "\nNationality:",
-    //   nationality,
-    //   "\n\n ===================\n\n"
-    // );
-
-    // console.log("Trying on GPT-3");
-    // const openai = new OpenAIApi(configuration); only for edge
-
-    // const response = await openai({
-    //   model: "gpt-3.5-turbo",
-    //   prompt: `Recipe for ${name}${
-    //     !!nationality ? ` from ${nationality}` : ""
-    //   } as a json object of type: {name:string,ingredients:string[],steps:string[],tagsRelated:string[],commonNames:string[]}`,
-    //   temperature: 0,
-    //   max_tokens: 600,
-    //   top_p: 1,
-    //   frequency_penalty: 0,
-    //   presence_penalty: 0,
-    //   stop: ['"""'],
-    // });
 
     const tools = [
       {
