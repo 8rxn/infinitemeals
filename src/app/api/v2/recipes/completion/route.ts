@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { array, z } from "zod";
-import { Configuration, OpenAIApi } from "openai-edge";
+// import { Configuration, OpenAIApi } from "openai-edge";
+import OpenAI from "openai";
+
+import { parse } from "best-effort-json-parser";
 
 const responseSchema = z.object({
   name: z.string(),
@@ -19,9 +22,10 @@ const reqSchema = z.object({
 });
 
 export async function POST(req: Request, res: NextResponse) {
-  const configuration = new Configuration({
+  const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
+  // "configuration" on edge
 
   try {
     const body = await req.json();
@@ -36,61 +40,194 @@ export async function POST(req: Request, res: NextResponse) {
     // );
 
     // console.log("Trying on GPT-3");
-    const openai = new OpenAIApi(configuration);
+    // const openai = new OpenAIApi(configuration); only for edge
 
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: `Recipe for ${name}${
-        !!nationality ? ` from ${nationality}` : ""
-      } as a json object of type: {name:string,ingredients:string[],steps:string[],tagsRelated:string[],commonNames:string[]}`,
-      temperature: 0,
+    // const response = await openai({
+    //   model: "gpt-3.5-turbo",
+    //   prompt: `Recipe for ${name}${
+    //     !!nationality ? ` from ${nationality}` : ""
+    //   } as a json object of type: {name:string,ingredients:string[],steps:string[],tagsRelated:string[],commonNames:string[]}`,
+    //   temperature: 0,
+    //   max_tokens: 600,
+    //   top_p: 1,
+    //   frequency_penalty: 0,
+    //   presence_penalty: 0,
+    //   stop: ['"""'],
+    // });
+
+    const tools = [
+      {
+        type: "function",
+        function: {
+          name: "get_recipe_json",
+          description:
+            "Get the recipe for a given food item from a given location as a json object of type {name:string,ingredients:string[],steps:string[],tagsRelated:string[],commonNames:string[]}",
+          parameters: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                description:
+                  "The name of the item for which recipe is to be fetched",
+              },
+              nationality: {
+                type: "string",
+                description:
+                  "The place where the food is famously from or a specific way of cooking that particular item",
+              },
+            },
+          },
+        },
+      },
+    ];
+
+    const response = await openai.chat.completions.create({
+      // model: "gpt-3.5-turbo-1106",
+      // messages: messages,
+      // functions: tools,
+      // max_tokens: 600,
+      // temperature: 0,
+      // function_call: "auto",
+      model: "gpt-3.5-turbo-1106",
+      messages: [
+        {
+          role: "system",
+          content:
+            "extract name from user message, generate it's recipe, return json object of type {name:string,ingredients:string[],steps:string[],tagsRelated:string[],commonNames:string[]}",
+        },
+        {
+          role: "user",
+          content: `give recipe for name=${name}${
+            nationality ? ` from nationality=${nationality}` : ""
+          } as json`,
+        },
+      ],
+      // functions: [
+      //   {
+      //     name: "get_recipe_json",
+      //     description:
+      //       "Get the recipe for a given food item from a given location as a json object of type {name:string,,steps:string[],tagsRelated:string[],commonNames:string[]}",
+      //     parameters: {
+      //       type: "object",
+      //       properties: {
+      //         name: {
+      //           type: "string",
+      //           description:
+      //             "The name of the item for which recipe is to be fetched",
+      //         },
+      //         nationality: {
+      //           type: "string",
+      //           description:
+      //             "The place where the food is famously from or a specific way of cooking that particular item",
+      //         },
+      //         ingredients: {
+      //           type: "string",
+      //           description: "The ingredients required to make the dish",
+      //         },
+      //         steps: {
+      //           type: "string",
+      //           description: "The steps required to make the dish",
+      //         },
+      //         tagsRelated: {
+      //           type: "string",
+      //           description: "Tags related to the dish",
+      //         },
+      //         commonNames: {
+      //           type: "string",
+      //           description: "Common names of the dish",
+      //         },
+      //       },
+      //     },
+
+      //   },
+      // ],
       max_tokens: 600,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-      stop: ['"""'],
+      // function_call: "auto",
+      response_format: { type: "json_object" },
     });
+    console.log(
+      "\n\n\n============ Response\n===========\n\n",
+      response.choices[0].message
+    );
 
-    // console.log("\n\n\n============ Response\n===========\n\n", response);
+    const responseMessage = `${response.choices[0].message.content}`;
 
-    const responseJson = await response.json();
-    // console.log(
-    //   "\n\n\n============ Response JSON \n===========\n\n",
-    //   responseJson
-    // );
+    // const responseSample = ``;
 
-    const responseAI = JSON.stringify(responseJson.choices[0].text)
+    // const sample = `"{\n  \"name\": \"Malai Chap\",\n  \"ingredients\": [\n    \"1 cup malai (clotted cream)\",\n    \"1/2 cup milk\",\n    \"2 tbsp ghee (clarified butter)\",\n    \"1/2 cup sugar\",\n    \"1/4 tsp cardamom powder\",\n    \"2 tbsp chopped nuts (almonds, pistachios, cashews) for garnish\"\n  ],\n  \"steps\": [\n    \"Heat ghee in a pan and add the malai. Cook on medium heat for 5 minutes, stirring constantly.\",\n    \"Add the milk and continue to cook for another 5 minutes, stirring frequently.\",\n    \"Add the sugar and cardamom powder, and cook for 5-7 minutes until the mixture thickens and starts to leave the sides of the pan.\",\n    \"Remove from heat and let it cool for a few minutes.\",\n    \"Pour the mixture into serving bowls, garnish with chopped nuts, and refrigerate for 2 hours before serving.\"\n  ],\n  \"tagsRelated\": [\n    \"Indian dessert\",\n    \"Cream-based dessert\",\n    \"Quick and easy\"\n  ],\n  \"commonNames\": [\n    \"Malai Chap\",\n    \"Malai Kulfi\",\n    \"Malai Pudding\"\n  ]\n}"`;
+
+    if (responseMessage == null) {
+      return NextResponse.json(
+        { error: "something went wrong" },
+        { status: 500 }
+      );
+    }
+
+    const sampleGPT = responseMessage
       .replaceAll("\\n", "\n")
       .replaceAll("\\", "")
-      .replaceAll('""', '"');
+      .replaceAll('""', '"')
+      .replaceAll(`steps`, `instructions`);
 
-    const jsondata = responseAI
-      .substring(0, responseAI.length - 1)
-      .replace('"', "")
-      .trim()
-      .replaceAll("name:", '"name":')
-      .replaceAll("ingredients:", '"ingredients":')
-      .replaceAll("steps:", '"instructions":')
-      .replaceAll("tagsRelated:", '"tagsRelated":')
-      .replaceAll("commonNames:", '"commonNames":')
-      .replaceAll(",\n", ",\n  ");
+    console.log("\n\n\n sample gpt\n\n", sampleGPT);
 
-    // console.log("\n\n\n=====\njsondata\n\n", jsondata);
+    // const sampleGPT = `{
+    //   "name": "Malai Chap",
+    //   "ingredients": [
+    //     "Chicken",
+    //     "Yogurt",
+    //     "Fresh cream",
+    //     "Ginger-garlic paste",
+    //     "Green chilies",
+    //     "Coriander leaves",
+    //     "Mint leaves",
+    //     "Lemon juice",
+    //     "Cashew nut paste",
+    //     "Garam masala",
+    //     "Turmeric powder",
+    //     "Red chili powder",
+    //     "Kasuri methi",
+    //     "Salt",
+    //     "Oil"
+    //   ],
+    //   "steps": [
+    //     "Marinate chicken with yogurt, ginger-garlic paste, and salt for 30 minutes.",
+    //     "Heat oil in a pan and add marinated chicken. Cook until the chicken is half done.",
+    //     "Add green chilies, coriander leaves, and mint leaves. Saute for a few minutes.",
+    //     "Add cashew nut paste, garam masala, turmeric powder, red chili powder, and salt. Mix well.",
+    //     "Cook until the chicken is tender and the masala is well-cooked.",
+    //     "Add fresh cream, lemon juice, and kasuri methi. Mix and cook for a few more minutes.",
+    //     "Garnish with coriander leaves and serve hot."
+    //   ],
+    //   "tagsRelated": [
+    //     "Indian cuisine",
+    //     "Creamy chicken",
+    //     "Spicy",
+    //     "Flavorful"
+    //   ],
+    //   "commonNames": [
+    //     "Malai Chicken",
+    //     "Creamy Chicken Curry"
+    //   ]
+    // }`;
 
-    //   const jsondata = ` {
-    //     "name": "Schezwan Fried Rice",
-    //       "ingredients": ["2 cups cooked rice", "1/2 cup chopped onion", "1/2 cup chopped bell pepper", "1/2 cup chopped carrots", "1/4 cup chopped celery", "1/4 cup chopped green onions", "1/4 cup chopped garlic", "1/4 cup soy sauce", "1/4 cup schezwan sauce", "1/4 cup vegetable oil", "Salt and pepper to taste"],
-    //       "instructions": ["Heat oil in a large skillet over medium-high heat.", "Add onion, bell pepper, carrots, celery, and green onions. Cook for 3-4 minutes, stirring occasionally.", "Add garlic and cook for an additional minute.", "Add cooked rice and stir to combine.", "Add soy sauce and schezwan sauce and stir to combine.", "Cook for an additional 3-4 minutes, stirring occasionally.", "Season with salt and pepper to taste.", "Serve hot."],
-    //       "tagsRelated": ["Chinese", "Fried Rice", "Schezwan"],
-    //       "commonNames": ["Chinese Fried Rice", "Schezwan Rice"]
-    // }`
-    const recipeGPT = JSON.parse(jsondata);
+    let JsonResponse;
 
-    recipeGPT.commonNames.push(name);
+    try {
+      JsonResponse = parse(sampleGPT);
+    } catch (error) {
+      console.error("improper json\n\n", error);
+      return NextResponse.json(
+        { error: "Internal Server Error" },
+        { status: 500 }
+      );
+    }
 
-    // console.log(recipeGPT);
+    console.log(JsonResponse);
 
-    return NextResponse.json(responseSchema.parse(recipeGPT), {
+    JsonResponse.commonNames.push(name);
+
+    return NextResponse.json(responseSchema.parse(JsonResponse), {
       status: 200,
     });
   } catch (error) {
