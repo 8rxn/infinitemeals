@@ -25,7 +25,7 @@ export async function POST(req: Request, res: NextResponse) {
     console.log(body.json);
     const { tag } = reqSchema.parse(body.json);
 
-    console.log("Trying on Text Davinci - 3");
+    console.log("Trying on GPT");
     const configuration = new Configuration({
       apiKey: process.env.OPENAI_API_KEY,
     });

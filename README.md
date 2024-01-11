@@ -1,7 +1,7 @@
 # Infinite Meals
 ![image](https://github.com/8rxn/infinitemeals/assets/75237697/0e14140c-758f-4bf7-838f-38c667b3ad6d)
 
-Infinite Meals is a recipe search engine that uses OpenAI's Text Davinci 003 Model through Open AI API to generate recipes for any given Food. It's a simple and easy way to find new recipes and get inspiration for your next meal.
+Infinite Meals is a recipe search engine that uses OpenAI's GPT-3.5-Turbo-1106 Model through Open AI API to generate recipes for any given Food. It's a simple and easy way to find new recipes and get inspiration for your next meal.
 
 ## How to Search For Recipes:
 

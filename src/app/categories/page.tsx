@@ -19,7 +19,7 @@ const Category = async () => {
       </h1>
       <p className="sm:text-3xl text-lg text-slate-800 dark:text-slate-300">
         <Balancer>
-          Look for your favorite food and let Text Davinci 3 help you cook it
+          Look for your favorite food and let AI help you cook it
         </Balancer>
       </p>
       <Categories />

@@ -15,7 +15,7 @@ const Hero = () => {
             Get a new meal idea every day
           </h2>
           <h2 className="font-semibold text-xs sm:text-lg text-slate-500">
-            Powered By Text Davinci 3 from Open AI
+            Powered By GPT-3.5-Turbo-1106 from Open AI
           </h2>
         </div>
 

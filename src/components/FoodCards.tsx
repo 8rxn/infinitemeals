@@ -25,7 +25,7 @@ const FoodCards = (props: Props) => {
   const [loading, setLoading] = useState<
     | "loading"
     | ""
-    | "Fetching A Recipe From Text Davinci 003"
+    | "Fetching A Recipe From GPT-3.5-Turbo-1106"
     | "Getting Recipe into our Database"
   >("");
   useEffect(() => {
@@ -36,7 +36,7 @@ const FoodCards = (props: Props) => {
         body: SuperJSON.stringify({ tag: props.tag }),
       });
       if (res.status == 404) {
-        setLoading("Fetching A Recipe From Text Davinci 003");
+        setLoading("Fetching A Recipe From GPT-3.5-Turbo-1106");
         res = await fetch("/api/v2/tags/recipes/completion", {
           method: "POST",
           body: SuperJSON.stringify({ tag: props.tag }),

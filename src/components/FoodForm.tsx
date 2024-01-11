@@ -74,7 +74,7 @@ const FoodForm: FC<Props> = ({ fetchData, isLoading, status }) => {
           status ? "opacity-100" : "opacity-0"
         } transition-opacity duration-500 ease-out`}
       >
-        <Balancer>Does not Exist on our Database yet! <br/> Trying on Text Davinci 003</Balancer>
+        <Balancer>Does not Exist on our Database yet! <br/> Trying on GPT-3.5-Turbo-1106</Balancer>
       </p>
     </form>
   );

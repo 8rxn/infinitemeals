@@ -17,7 +17,7 @@ const Intro = () => {
       </Link>
       <p className="text-xl font-light">
         <Balancer>
-          {`Infinite Meals is a recipe search engine that uses OpenAI's Text Davinci 003 Model through Open AI API to generate recipes for any given Food. It's a simple and easy way to find new recipes and get inspiration for your next meal.`}
+          {`Infinite Meals is a recipe search engine that uses OpenAI's GPT-3.5-Turbo-1106 Model through Open AI API to generate recipes for any given Food. It's a simple and easy way to find new recipes and get inspiration for your next meal.`}
         </Balancer>
       </p>
     </div>
