@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     url: "https://imeals.rajaryan.work/",
     title: "Infinite Meals",
     description: "Get a new meal idea every day, Powered by Text-Davinci-003",
-    images: "https://imeals.rajaryan.work/og.png",
+    images: "https://imeals.rajaryan.work/api/og.png",
   },
   twitter: {
     card: "summary_large_image",
     title: "Infinite Meals",
     description: "Get a new meal idea every day, Powered by Text-Davinci-003",
     creator: "@rajxryan",
-    images: ["https://imeals.rajaryan.work/og.png"],
+    images: ["https://imeals.rajaryan.work/api/og.png"],
   },
   category: "technology",
 };

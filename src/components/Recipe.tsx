@@ -1,13 +1,20 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Balancer } from "react-wrap-balancer";
 import { ContextProvider } from "./Providers";
 import Image from "next/image";
 import { z } from "zod";
 import Link from "next/link";
-import { Link as LinkIcon } from "lucide-react";
+import { DownloadIcon, Link as LinkIcon, PizzaIcon } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import Button from "./ui/Button";
+//@ts-ignore
+// import { useToImage } from "@hcorta/react-to-image";
+
+import { useToPng } from "@hugocxl/react-to-image";
+
+import qrcode from "qrcode-generator";
+import { useTheme } from "next-themes";
 
 type Props = {};
 const reqSchema = z.object({
@@ -17,6 +24,24 @@ const reqSchema = z.object({
 
 const Recipe = (props: Props) => {
   const { recipe } = useContext(ContextProvider);
+
+  const canvasRef = useRef(null);
+
+  const theme = useTheme().theme;
+
+  const [state, convertToPng, ref] = useToPng<HTMLDivElement>({
+    onSuccess: (data) => {
+      const a = document.createElement("a");
+      a.href = data;
+      a.download = recipe?.name ? recipe.name : "recipe" + ".png";
+      a.click();
+    },
+  });
+
+  const downloadImage = () => {
+    convertToPng();
+  };
+
   const [copyText, setCopyText] = useState<"Copy Link" | "Copied">("Copy Link");
   useEffect(() => {
     const fetchImage = async () => {
@@ -81,10 +106,67 @@ const Recipe = (props: Props) => {
     source: "https://openai.com/dall-e-2",
     domain: "DALLE",
   });
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    if (!recipe) return;
+
+    const qr = qrcode(0, "M");
+    qr.addData("https://infinitemeals.vercel.app/recipes/" + recipe.id);
+    qr.make();
+
+    //@ts-expect-error
+    const context = canvasRef.current.getContext("2d");
+    const qrSize = qr.getModuleCount();
+    //@ts-expect-error
+    const moduleSize = canvasRef.current.width / qrSize;
+    
+    // Set the height of the canvas to match its width
+    //@ts-expect-error
+    canvasRef.current.height = canvasRef.current.width;
+
+    const cornerRadius = 1;
+
+    const qrColor = theme === "dark" ? "#FFF" : "#FF0B55";
+
+    for (let row = 0; row < qrSize; row++) {
+      for (let col = 0; col < qrSize; col++) {
+        // Change the color of the dark modules (black squares)
+        context.fillStyle = qr.isDark(row, col) ? qrColor : "#ffffff00";
+        const x = col * moduleSize;
+        const y = row * moduleSize;
+        // Draw a rounded rectangle for each module
+        context.beginPath();
+        context.moveTo(x + cornerRadius, y);
+        context.arcTo(
+          x + moduleSize,
+          y,
+          x + moduleSize,
+          y + moduleSize,
+          cornerRadius
+        );
+        context.arcTo(
+          x + moduleSize,
+          y + moduleSize,
+          x,
+          y + moduleSize,
+          cornerRadius
+        );
+        context.arcTo(x, y + moduleSize, x, y, cornerRadius);
+        context.arcTo(x, y, x + moduleSize, y, cornerRadius);
+        context.closePath();
+        context.fill();
+      }
+    }
+  }, [recipe, canvasRef.current, theme]);
+
   if (!recipe) return null;
 
   return (
-    <div className="bg-slate-100 dark:bg-slate-900 p-8 sm:p-12 rounded-xl shadow-lg max-[500px]:pt-16">
+    <div
+      className="bg-slate-100 dark:bg-slate-900 p-8 sm:p-12 rounded-xl shadow-lg max-[500px]:pt-16"
+      ref={ref}
+    >
       <h1 className="font-bold text-5xl sm:text-7xl mb-4 ">
         <Balancer>
           Here&apos;s Your Recipe for{" "}
@@ -208,24 +290,57 @@ const Recipe = (props: Props) => {
       <p className="sm:text-3xl text-lg text-slate-800 dark:text-slate-300 mb-4">
         <Balancer className="italic">Bon Appetit!</Balancer>
       </p>
-      <Button
-        size={"lg"}
-        onClick={() => {
-          navigator.clipboard.writeText(
-            "https://infinitemeals.vercel.app/recipes/" + recipe.id
-          );
-          setCopyText("Copied");
-          setTimeout(() => {
-            setCopyText("Copy Link");
-          }, 1000);
-        }}
+
+      <div
+        className={`flex justify-center items-center gap-8 ${
+          state.isLoading ? "opacity-0" : "opacity-100"
+        }`}
       >
-        {" "}
-        {copyText}
-        <span className="ml-6">
-          <LinkIcon />
-        </span>{" "}
-      </Button>
+        <Button
+          size={"lg"}
+          onClick={() => {
+            navigator.clipboard.writeText(
+              "https://infinitemeals.vercel.app/recipes/" + recipe.id
+            );
+            setCopyText("Copied");
+            setTimeout(() => {
+              setCopyText("Copy Link");
+            }, 1000);
+          }}
+        >
+          {" "}
+          {copyText}
+          <span className="ml-6">
+            <LinkIcon />
+          </span>{" "}
+        </Button>
+        <Button size={"lg"} onClick={downloadImage} disabled={state.isLoading}>
+          {state.isLoading && <Loader2 className="w-8 h-8 animate-spin" />}
+          <span className="">{!state.isLoading && <DownloadIcon />}</span>{" "}
+        </Button>
+      </div>
+      <div className="flex justify-between items-end relative ">
+        <div className="flex gap-4">
+          <p className="text-xs italic font-bold text-left max-w-[50%]">
+            {" "}
+            {'"'} Savor each bite, nourish your soul with the essence of food
+            {' "'}
+          </p>
+        </div>
+        {state.isLoading && (
+          <div className="absolute left-[50%] translate-x-[-50%]">
+            <h1 className="font-bold text-xl font-mono cursor-pointer ">
+              <span className="inline-block mr-2 -translate-y-[50%] ">
+                <PizzaIcon />
+              </span>
+              <span className="inline-block">
+                Infinite <br /> Meals
+              </span>
+            </h1>
+          </div>
+        )}
+        <canvas ref={canvasRef} className="max-w-[100px] mt-4 "></canvas>
+      </div>
     </div>
   );
 };

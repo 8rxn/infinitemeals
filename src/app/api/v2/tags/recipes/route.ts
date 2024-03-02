@@ -11,19 +11,21 @@ const responseSchema = z.object({
       id: z.string(),
     })
   ),
+  nextPage: z.number().optional(),
 });
 
 const reqSchema = z.object({
   tag: z.string(),
+  page: z.number().min(1).default(1),
+  limit: z.number().min(1).max(100).default(10),
 });
 
 export async function POST(req: Request, res: NextResponse) {
-
   try {
     const body = await req.json();
-    const { tag } = reqSchema.parse(body.json);
+    const { tag, page, limit } = reqSchema.parse(body.json);
 
-    
+    const skip = (page - 1) * limit;
 
     const recipes =
       tag === "all"
@@ -34,7 +36,9 @@ export async function POST(req: Request, res: NextResponse) {
             distinct: ["name"],
             orderBy: {
               id: "desc",
-            }
+            },
+            take: limit,
+            skip: skip,
           })
         : await prisma.recipe.findMany({
             where: {
@@ -48,6 +52,8 @@ export async function POST(req: Request, res: NextResponse) {
               tags: true,
             },
             distinct: ["name"],
+            take: limit,
+            skip: skip,
           });
 
     const responseArray: [
@@ -73,19 +79,22 @@ export async function POST(req: Request, res: NextResponse) {
 
     // console.log("Response Array", responseArray);
 
-    if (recipes.length === 0) {
+    if (recipes.length === 0 && page == 1) {
       return NextResponse.json(responseSchema.parse({ recipes: [] }), {
         status: 404,
       });
     }
 
-    return NextResponse.json(responseSchema.parse({ recipes: responseArray }), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
+    return NextResponse.json(
+      responseSchema.parse({ recipes: responseArray, nextPage: page + 1 }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });

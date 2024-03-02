@@ -6,7 +6,7 @@ import { redis } from "./server/redis";
 
 const ratelimit = new Ratelimit({
   redis: redis,
-  limiter: Ratelimit.fixedWindow(10, "1 h"),
+  limiter: Ratelimit.fixedWindow(5, "1 h"),
 });
 
 export default withAuth(
