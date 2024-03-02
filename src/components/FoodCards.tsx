@@ -82,6 +82,7 @@ const FoodCards = (props: Props) => {
     if (foodFetched.length < 10) {
       setHasMore(false);
     }
+    //@ts-ignore
     setFood((prevFood) => [...prevFood, ...foodFetched]);
     setLoading("");
   };
@@ -93,9 +94,11 @@ const FoodCards = (props: Props) => {
   const debounce = (func: () => void, delay: number) => {
     let inDebounce: NodeJS.Timeout;
     return function () {
+      //@ts-ignore
       const context = this;
       const args = arguments;
       clearTimeout(inDebounce);
+      //@ts-ignore
       inDebounce = setTimeout(() => func.apply(context, args), delay);
     };
   };
