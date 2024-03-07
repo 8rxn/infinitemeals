@@ -11,6 +11,7 @@ function Footer({}: Props) {
     <div className="m-auto max-w-7xl min-h-max py-8 px-4 bg-slate-100/20 dark:bg-slate-900/75 backdrop-blur-md rounded-lg">
       <div className=" xl:px-0 w-full flex flex-col sm:flex-row gap-y-4 justify-between m-auto mt-4 text-gray-950 dark:text-slate-100 items-center ">
         <div className="flex gap-2 justify-evenly sm:hidden ">
+          
           <Link href={"/documentation"}>
             <Button variant={"ghost"} className="">
               Documentation
@@ -55,7 +56,8 @@ function Footer({}: Props) {
             </span>
           </h1>
         </Link>
-        <div className="hidden gap-2 justify-evenly sm:flex ">
+        <div className="hidden gap-2 justify-evenly sm:flex items-center ">
+         
           <Link href={"/documentation"}>
             <Button variant={"ghost"} className="">
               Documentation
